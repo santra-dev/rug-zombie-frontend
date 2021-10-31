@@ -6,6 +6,7 @@ import { useWeb3React } from '@web3-react/core'
 import { getSpawningPoolAddress } from 'utils/addressHelpers'
 import Page from '../../components/layout/Page'
 import Table from './components/Table'
+import SharkPool from './components/SharkPool'
 import './SpawningPools.Styles.css'
 import { initialSpawningPoolData, spawningPool } from '../../redux/fetch'
 import * as get from '../../redux/get'
@@ -69,6 +70,7 @@ const SpawningPools: React.FC = () => {
       </PageHeader>
       <Page>
       <div>
+        <SharkPool />
         {get.spawningPools().map((g) => {
           return <Table zombieUsdPrice={get.zombiePriceUsd()}
                         updateResult={updateResult} updateAllowance={updateAllowance} bnbInBusd={bnbInBusd}
