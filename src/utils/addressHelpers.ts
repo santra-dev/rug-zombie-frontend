@@ -1,7 +1,7 @@
 import addresses from 'config/constants/contracts'
 import tokens from 'config/constants/tokens'
 import { Address } from 'config/constants/types'
-import { spawningPoolById } from '../redux/get'
+import { sharkPoolById, spawningPoolById } from '../redux/get'
 
 export const getAddress = (address: Address): string => {
   const mainNetChainId = 56
@@ -112,4 +112,8 @@ export const getRugRollAddress = () => {
 
 export const getNftSwapperAddress = () => {
   return getAddress(addresses.nftSwapper)
+}
+
+export const getSharkPoolAddress = (id: number) => {
+  return getAddress(sharkPoolById(id).address)
 }
