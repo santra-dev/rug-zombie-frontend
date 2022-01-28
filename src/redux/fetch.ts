@@ -52,7 +52,6 @@ import tombs from './tombs'
 import * as get from './get'
 import spawningPoolAbi from '../config/abi/spawningPool.json'
 import drFrankensteinAbi from '../config/abi/drFrankenstein.json'
-import pancakePairAbi from '../config/abi/pancakePairAbi.json'
 import mausoleumAbi from '../config/abi/mausoleum.json'
 import mausoleumV3Abi from '../config/abi/mausoleumV3.json'
 import tombOverlayAbi from '../config/abi/tombOverlay.json'
@@ -351,7 +350,7 @@ export const sharkPool = (id: number, poolUpdateObj?: { update: number, setUpdat
   const pool = get.sharkPoolById(id);
   const address = getSharkPoolAddress(id);
   const token = getBep20Contract(getAddress(pool.stakeToken.address));
-  
+
   let calls = [
     { address, name: 'unlockFeeInBnb', params: [] },
     { address, name: 'minStakeAmount', params: [] },
@@ -366,7 +365,7 @@ export const sharkPool = (id: number, poolUpdateObj?: { update: number, setUpdat
       token.methods.balanceOf(address).call()
         .then(balanceRes => {
           store.dispatch(updateSharkPoolInfo(
-            id, 
+            id,
             {
               unlockFee: new BigNumber(res[0].toString()),
               minStake: new BigNumber(res[1].toString()),
@@ -374,7 +373,7 @@ export const sharkPool = (id: number, poolUpdateObj?: { update: number, setUpdat
               depositTaxRate: res[3] / 100,
               requiresDeposit: res[4],
               minStakeTime: new BigNumber(res[5].toString()),
-              totalStaked: new BigNumber(balanceRes.toString()) 
+              totalStaked: new BigNumber(balanceRes.toString())
             }
           ));
           if (poolUpdateObj) {

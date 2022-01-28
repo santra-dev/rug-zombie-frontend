@@ -2,20 +2,7 @@ import { useMemo } from 'react'
 import useWeb3 from 'hooks/useWeb3'
 import {
   getBep20Contract,
-  getCakeContract,
-  getBunnyFactoryContract,
-  getBunnySpecialContract,
-  getProfileContract,
-  getLotteryContract,
-  getLotteryTicketContract,
-  getMasterchefContract,
-  getPointCenterIfoContract,
-  getSouschefContract,
-  getClaimRefundContract,
-  getTradingCompetitionContract,
-  getEasterNftContract,
   getErc721Contract,
-  getCakeVaultContract,
   getPredictionsContract,
   getZombieContract,
   getDrFrankensteinContract,
@@ -74,10 +61,6 @@ export const useBunnyFactory = () => {
 export const useZombieBalanceChecker = () => {
   const web3 = useWeb3()
   return useMemo(() => getZombieBalanceCheckerContract(web3), [web3])
-}
-export const useProfile = () => {
-  const web3 = useWeb3()
-  return useMemo(() => getProfileContract(web3), [web3])
 }
 
 export const useLottery = () => {
@@ -208,4 +191,3 @@ export const useRugMarket = () => {
   const web3 = useWeb3()
   return useMemo(() => getRugMarketContract(web3), [web3])
 }
-

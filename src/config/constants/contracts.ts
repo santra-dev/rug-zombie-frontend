@@ -20,10 +20,6 @@ export default {
     97: '',
     56: '0x8A9EC04a3e225F6c68212a340325293F8c3F50eC',
   },
-  pancakeFactory: {
-    97: '',
-    56: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
-  },
   nftConverter: {
     97: '',
     56: '0x29F085A56050285ba2d6D72983bd7F77a373e413',
