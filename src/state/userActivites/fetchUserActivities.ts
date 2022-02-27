@@ -15,14 +15,16 @@ const ACTIVITY_TYPE_TO_EVENT_NAME: Map<UserActivityType, string> = new Map([
 
 // excludes 'Withdraw' due to overlap between harvest and withdraw activity types
 const EVENT_NAME_TO_ACTIVITY_TYPE: Map<string, UserActivityType> = new Map([
-    ['Deposit', UserActivityType.DrFDeposit],
-    ['WithdrawEarly', UserActivityType.DrFWithdrawEarly],
-    ['ReviveRug', UserActivityType.DrFMintNft],
+  ['Deposit', UserActivityType.DrFDeposit],
+  ['WithdrawEarly', UserActivityType.DrFWithdrawEarly],
+  ['ReviveRug', UserActivityType.DrFMintNft],
 ])
 
 const EVENT_NAME_TO_USER_PROP: Map<string, string> = new Map(
-    ['Deposit', 'Withdraw', 'WithdrawEarly'].map((event) => [event, 'user'])
-        .concat([['ReviveRug', 'to']]) as [string, string][]
+  ['Deposit', 'Withdraw', 'WithdrawEarly'].map((event) => [event, 'user']).concat([['ReviveRug', 'to']]) as [
+    string,
+    string,
+  ][],
 )
 
 const RELEVANT_EVENT_TYPES: Set<string> = new Set(ACTIVITY_TYPE_TO_EVENT_NAME.values())
@@ -35,8 +37,7 @@ const getEventType = (event: EventData) => {
   }
 
   if (eventName === 'Withdraw') {
-    return (new BigNumber(returnValues.amount).isZero())
-        ? UserActivityType.DrFHarvest : UserActivityType.DrFWithdraw
+    return new BigNumber(returnValues.amount).isZero() ? UserActivityType.DrFHarvest : UserActivityType.DrFWithdraw
   }
 
   return EVENT_NAME_TO_ACTIVITY_TYPE.get(eventName)
@@ -63,18 +64,19 @@ export const fetchDrFEvents = async (account: string, toBlock?: number) => {
     toBlock: currentBlock,
   })
 
-  return Promise.all(allEvents.filter(isRelevantForUser(account))
-      .map(async (event) => {
-        const { returnValues, blockNumber } = event
-        let { timestamp } = await web3.eth.getBlock(blockNumber, false)
-        if (typeof timestamp === 'string') {
-          timestamp = parseInt(timestamp)
-        }
+  return Promise.all(
+    allEvents.filter(isRelevantForUser(account)).map(async (event) => {
+      const { returnValues, blockNumber } = event
+      let { timestamp } = await web3.eth.getBlock(blockNumber, false)
+      if (typeof timestamp === 'string') {
+        timestamp = parseInt(timestamp)
+      }
 
-        return {
-          type: getEventType(event),
-          data: returnValues,
-          timestamp,
-        }
-      }))
+      return {
+        type: getEventType(event),
+        data: returnValues,
+        timestamp,
+      }
+    }),
+  )
 }

@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import {  BigNumber as EthersBigNumber } from 'ethers'
+import { BigNumber as EthersBigNumber } from 'ethers'
 
 import { chunk } from 'lodash'
 import bep20Abi from 'config/abi/erc20.json'
@@ -12,7 +12,7 @@ import {
   getApeswapFactoryAddress,
   getPancakeFactoryAddress,
   getWbnbAddress,
-  getZombieAddress
+  getZombieAddress,
 } from 'utils/addressHelpers'
 import { Dex, SpawningPoolConfig } from 'config/constants/types'
 import { equalAddresses } from '../../utils'
@@ -43,18 +43,24 @@ const getRouterAddress = (dex: Dex): string => {
 }
 
 const getStats = async (spawningPoolAddresses: string[]): Promise<Stats[]> => {
-  const calls = spawningPoolAddresses.flatMap((address) => [
-      'rewardPerBlock', 'unlockFeeInBnb', 'minimumStake', 'minimumStakingTime', 'nftRevivalTime',
-  ].map((method) => ({
-    address,
-    name: method,
-    params: [],
-  })))
+  const calls = spawningPoolAddresses.flatMap((address) =>
+    ['rewardPerBlock', 'unlockFeeInBnb', 'minimumStake', 'minimumStakingTime', 'nftRevivalTime'].map((method) => ({
+      address,
+      name: method,
+      params: [],
+    })),
+  )
 
   const results: number[] = await multicall(spawningPool, calls)
-  return chunk(results, 5).map(([
-      rewardPerBlock, unlockFeeInBnb, minimumStake, minimumStakingTime, nftIntervalTime,
-                      ]) => ({ rewardPerBlock, unlockFee: unlockFeeInBnb, minimumStake, minimumStakingTime, nftMintTime: nftIntervalTime }))
+  return chunk(results, 5).map(
+    ([rewardPerBlock, unlockFeeInBnb, minimumStake, minimumStakingTime, nftIntervalTime]) => ({
+      rewardPerBlock,
+      unlockFee: unlockFeeInBnb,
+      minimumStake,
+      minimumStakingTime,
+      nftMintTime: nftIntervalTime,
+    }),
+  )
 }
 
 const getLpAddresses = async (spawningPoolConfigs: SpawningPoolConfig[]): Promise<string[]> => {
