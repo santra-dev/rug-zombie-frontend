@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js'
 import { CardBody, PlayCircleOutlineIcon, Button, Text, Flex, FlexProps } from '@rug-zombie-libs/uikit'
 import { useTranslation } from 'contexts/Localization'
 import { BetPosition } from 'state/types'
+import { useAccount } from '../../../../state/hooks'
 import CardFlip from '../CardFlip'
 import { RoundResultBox } from '../RoundResult'
 import Card from './Card'
@@ -10,7 +11,7 @@ import CardHeader from './CardHeader'
 import SetPositionCard from './SetPositionCard'
 import { BIG_ZERO } from '../../../../utils/bigNumber'
 import { getBalanceAmount } from '../../../../utils/formatBalance'
-import { account, auctionById } from '../../../../redux/get'
+import { auctionById } from '../../../../redux/get'
 import { getMausoleumAddress } from '../../../../utils/addressHelpers'
 import { useERC20, useMausoleum } from '../../../../hooks/useContract'
 import '../MobileCard/cardStyles.css'
@@ -43,6 +44,7 @@ interface OpenRoundCardProps {
 }
 
 const AuctionEndCard: React.FC<OpenRoundCardProps> = ({ lastBid, id, bidId }) => {
+  const account = useAccount()
   const [state, setState] = useState({
     isSettingPosition: false,
     position: BetPosition.BULL,
@@ -82,23 +84,21 @@ const AuctionEndCard: React.FC<OpenRoundCardProps> = ({ lastBid, id, bidId }) =>
   const v3 = version === 'v3'
 
   const withdrawBid = () => {
-    if (account()) {
-      mausoleum.methods.withdrawBid(aid).send({ from: account() })
+    if (account) {
+      mausoleum.methods.withdrawBid(aid).send({ from: account })
     }
   }
-
-  const accountAddress = account()
-
+  
   useEffect(() => {
-    if (accountAddress && !v3) {
+    if (account && !v3) {
       bidTokenContract.methods
-        .allowance(accountAddress, getMausoleumAddress(version))
+        .allowance(account, getMausoleumAddress(version))
         .call()
         .then((res) => {
           setAllowance(new BigNumber(res))
         })
     }
-  }, [accountAddress, bidTokenContract.methods, v3, version])
+  }, [account, bidTokenContract.methods, v3, version])
 
   return (
     <CardFlip isFlipped={isSettingPosition} height="404px">

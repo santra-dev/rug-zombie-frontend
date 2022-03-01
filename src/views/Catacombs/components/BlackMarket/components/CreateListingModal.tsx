@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Modal, Text } from '@catacombs-libs/uikit'
 import { ethers } from 'ethers'
 import { BigNumber } from 'bignumber.js'
+import { useWeb3React } from '@web3-react/core'
 import allowedRuggedTokens from '../../../../../config/constants/rugMarketTokenList'
 import tokens from '../../../../../config/constants/tokens'
 import { BIG_ZERO } from '../../../../../utils/bigNumber'
 import { useRugMarket } from '../../../../../hooks/useContract'
-import { account } from '../../../../../redux/get'
 import { getDecimalAmount } from '../../../../../utils/formatBalance'
 import { getBep20Contract } from '../../../../../utils/contractHelpers'
 import { getAddress, getRugMarketAddress } from '../../../../../utils/addressHelpers'
@@ -20,7 +20,7 @@ interface ModalProps {
 const CreateListingModal: React.FC<ModalProps> = ({ onDismiss }) => {
   const web3 = useWeb3()
   const { toastDefault } = useToast()
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const rugMarketContract = useRugMarket()
   const [quantity, setQuantity] = useState(BIG_ZERO)
   const [price, setPrice] = useState(BIG_ZERO)
@@ -62,7 +62,7 @@ const CreateListingModal: React.FC<ModalProps> = ({ onDismiss }) => {
     setApproveRuggedTokenText('Approving rugged token...')
     getBep20Contract(getAddress(tokens[ruggedToken].address), web3)
       .methods.approve(getRugMarketAddress(), ethers.constants.MaxUint256)
-      .send({ from: account() })
+      .send({ from: wallet })
       .then(() => {
         setRugApproved(true)
         setApproveRuggedTokenText('Approved')

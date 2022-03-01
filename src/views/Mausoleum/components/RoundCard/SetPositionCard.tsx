@@ -14,13 +14,13 @@ import {
   AutoRenewIcon,
 } from '@rug-zombie-libs/uikit'
 import BigNumber from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import { useTranslation } from 'contexts/Localization'
 import { useMausoleum } from 'hooks/useContract'
 import useToast from 'hooks/useToast'
 import { BetPosition } from 'state/types'
 import { getBalanceAmount, getDecimalAmount } from 'utils/formatBalance'
 import UnlockButton from 'components/UnlockButton'
+import { useAccount } from '../../../../state/hooks'
 import { getBnbAmount } from '../../helpers'
 import useSwiper from '../../hooks/useSwiper'
 import FlexRow from '../FlexRow'
@@ -70,7 +70,7 @@ const SetPositionCard: React.FC<SetPositionCardProps> = ({ id, onBack, onSuccess
   const [value, setValue] = useState('')
   const [isTxPending, setIsTxPending] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { swiper } = useSwiper()
   const minBetAmount = BIG_ZERO
   const { t } = useTranslation()

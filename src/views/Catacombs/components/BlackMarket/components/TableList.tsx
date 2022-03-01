@@ -28,7 +28,7 @@ interface TableListProps {
 const TableList: React.FC<TableListProps> = ({ id }) => {
   const { toastDefault } = useToast()
   const { t } = useTranslation()
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const rugMarketContract = useRugMarket()
   const listing = rugMarketListingById(id)
   const [isApproved, setIsApproved] = useState(false)

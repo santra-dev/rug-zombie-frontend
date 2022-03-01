@@ -15,7 +15,6 @@ const defaultState = {
   account: '',
   tombs,
   tombOverlays,
-  graves,
   burnGraves,
   spawningPools,
   sharkPools,

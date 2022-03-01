@@ -29,7 +29,7 @@ const IncreaseStakeModal: React.FC<IncreaseStakeModalProps> = ({ id, updateResul
   const [percent, setPercent] = useState(0)
   const [stakeTokenPrice, setStakeTokenPrice] = useState(0)
 
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const { theme } = useTheme()
   const tokenBalance = useTokenBalance(getAddress(pool.stakeToken.address))
   const poolContract = useSharkpool(id)

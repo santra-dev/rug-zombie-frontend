@@ -12,7 +12,7 @@ import {
 } from '@catacombs-libs/uikit'
 import { BigNumber } from 'bignumber.js'
 import { Lightbox } from 'react-modal-image'
-import { account } from '../../../../redux/get'
+import { useWeb3React } from '@web3-react/core'
 import Video from '../../../../components/Video'
 
 import { useInstaBuyContract } from '../../../../hooks/useContract'
@@ -55,6 +55,7 @@ const initialNftInfo = {
 }
 
 const InstabuyCard: React.FC<InstabuyCardProps> = ({ id, modalObj }) => {
+  const account = useAccount()
   const { nftId, version } = instaBuyById(id)
   const { name, symbol, description, address, path, type, totalSupply } = useGetNftById(nftId)
   const [isOpen, setIsOpen] = useState(false)
@@ -90,7 +91,7 @@ const InstabuyCard: React.FC<InstabuyCardProps> = ({ id, modalObj }) => {
       .then((res) => {
         instaBuy.methods
           .instaBuy(getAddress(address))
-          .send({ from: account(), value: res })
+          .send({ from: account, value: res })
           .then(() => {
             toastDefault(`Bought ${symbol}`)
           })

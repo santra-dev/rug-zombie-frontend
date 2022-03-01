@@ -17,7 +17,7 @@ interface DepositBoxProps {
 const DepositBox: React.FC<DepositBoxProps> = ({ id, onDeposit }) => {
   const { toastDefault } = useToast()
   const { t } = useTranslation()
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const pool = sharkpools.find((a) => a.id === id)
   const tokenContract = useERC20(getAddress(pool.stakeToken.address))
 

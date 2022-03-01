@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import { useWeb3React } from '@web3-react/core'
 import { BalanceInput, Button, Flex, Image, Modal, Slider, Text } from '@rug-zombie-libs/uikit'
 import useTheme from 'hooks/useTheme'
-import { account, coingeckoPrice, burnGraveById } from 'redux/get'
+import { coingeckoPrice, burnGraveById } from 'redux/get'
 import { getBalanceAmount, getDecimalAmount, getFullDisplayBalance } from 'utils/formatBalance'
 import BigNumber from 'bignumber.js'
 import { useDrBurnenstein } from 'hooks/useContract'
@@ -26,7 +27,7 @@ const DecreaseStakeModal: React.FC<DecreaseStakeModalProps> = ({ id, updateResul
   const [percent, setPercent] = useState(0)
   const [stakeTokenPrice, setStakeTokenPrice] = useState(0)
 
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const { theme } = useTheme()
   const graveContract = useDrBurnenstein()
   const { toastDefault } = useToast()

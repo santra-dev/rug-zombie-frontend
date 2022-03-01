@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Flex, Image, Modal, Text } from '@rug-zombie-libs/uikit'
-import { account, burnGraveById } from 'redux/get'
+import { burnGraveById } from 'redux/get'
 import BigNumber from 'bignumber.js'
 import { APESWAP_EXCHANGE_URL } from 'config'
+import { useWeb3React } from '@web3-react/core'
 import { getAddress } from '../../../../utils/addressHelpers'
 import { useDrBurnenstein, useERC20 } from '../../../../hooks/useContract'
 import useToast from '../../../../hooks/useToast'
@@ -23,7 +24,7 @@ const DepositTokenModal: React.FC<DepositTokenModalProps> = ({ id, updateResult,
 
   const grave = burnGraveById(id)
   const token = useERC20(getAddress(grave.depositToken.address))
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const drBurnensteinContract = useDrBurnenstein()
 
   useEffect(() => {

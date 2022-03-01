@@ -24,7 +24,7 @@ const Container = styled.div`
 `
 
 const BlackMarket: React.FC = () => {
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const { isLg, isXl } = useMatchBreakpoints()
   const isDesktop = isLg || isXl
   const [filter, setFilter] = useState(0)

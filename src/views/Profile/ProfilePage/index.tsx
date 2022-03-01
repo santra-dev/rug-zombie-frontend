@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { LinkExternal } from '@rug-zombie-libs/uikit'
 import styled from 'styled-components'
-import { useWeb3React } from '@web3-react/core'
 import DefaultBannerImage from 'images/backgrounds/DefaultProfileBanner.png'
 import BasicZombie from 'images/BasicZombie.gif'
 import RugZombieTab from 'images/profile/RugZombieTab.png'
@@ -9,7 +8,7 @@ import OblivionTab from 'images/profile/OblivionTab.png'
 import '../Profile.Styles.css'
 import { useAppDispatch } from '../../../state'
 import { fetchNftUserDataAsync } from '../../../state/nfts'
-import { useGetNfts } from '../../../state/hooks'
+import { useAccount, useGetNfts } from '../../../state/hooks'
 import ActivityCard from './components/ActivityCard'
 import StakingInfoCard from './components/StakingInfoCard'
 import NftCard from '../../Graveyard/components/Nfts/components/NftCard'
@@ -89,7 +88,7 @@ const NftsContainer = styled.div`
 `
 
 const ProfilePage: React.FC = () => {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const dispatch = useAppDispatch()
   const nfts = useGetNfts().data
 

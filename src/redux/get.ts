@@ -73,40 +73,12 @@ export const zmbeBnbTomb = (): Tomb => {
   return tombByPid(getId(pancakeZmbeBnbTombPid))
 }
 
-export const graveByPid = (pid: number): Grave => {
-  return store.getState().graves.find((g) => getId(g.pid) === pid)
-}
-
-export const graves = (): Grave[] => {
-  return store.getState().graves
-}
-
-export const graveUserInfo = (pid: number): UserInfo => {
-  return store.getState().graves[pid].userInfo
-}
-
-export const spawningPools = (): SpawningPool[] => {
-  return store.getState().spawningPools
-}
-
 export const sharkPools = (): SharkPool[] => {
   return store.getState().sharkPools
 }
 
-export const spawningPoolById = (id: number): SpawningPool => {
-  return store.getState().spawningPools.find((p) => p.id === id)
-}
-
 export const sharkPoolById = (id: number): SharkPool => {
   return store.getState().sharkPools.find((a) => a.id === id)
-}
-
-export const grave = (pid: number): Grave => {
-  return store.getState().graves.find((g) => getId(g.pid) === pid)
-}
-
-export const tombs = (): Tomb[] => {
-  return store.getState().tombs
 }
 
 export const auctions = (): Auction[] => {

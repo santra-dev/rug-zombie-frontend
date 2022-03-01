@@ -1,16 +1,16 @@
 // Approve an address
 import { Contract } from 'web3-eth-contract'
 import { BigNumber } from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 import { useAppDispatch } from '../state'
+import { useAccount } from '../state/hooks'
 import { depositRug, stake, unlock, unstake, unstakeEarly } from '../utils/callHelpers'
 import { fetchGravesUserDataAsync } from '../state/graves'
 import { BIG_ZERO } from '../utils/bigNumber'
 
 export const useStake = (drFrankensteinContract: Contract, pid: number, amount: BigNumber) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleStake = useCallback(async () => {
     try {
@@ -28,7 +28,7 @@ export const useStake = (drFrankensteinContract: Contract, pid: number, amount: 
 
 export const useUnstake = (drFrankensteinContract: Contract, pid: number, amount: BigNumber) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleUnstake = useCallback(async () => {
     try {
@@ -46,7 +46,7 @@ export const useUnstake = (drFrankensteinContract: Contract, pid: number, amount
 
 export const useUnstakeEarly = (drFrankensteinContract: Contract, pid: number, amount: BigNumber) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleUnstakeEarly = useCallback(async () => {
     try {
@@ -64,7 +64,7 @@ export const useUnstakeEarly = (drFrankensteinContract: Contract, pid: number, a
 
 export const useHarvest = (drFrankensteinContract: Contract, pid: number) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleHarvest = useCallback(async () => {
     try {
@@ -82,7 +82,7 @@ export const useHarvest = (drFrankensteinContract: Contract, pid: number) => {
 
 export const useUnlock = (drFrankensteinContract: Contract, pid: number, amount: BigNumber) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleUnlock = useCallback(async () => {
     try {
@@ -100,7 +100,7 @@ export const useUnlock = (drFrankensteinContract: Contract, pid: number, amount:
 
 export const useDepositRug = (drFrankensteinContract: Contract, pid: number, amount: BigNumber) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleDepositRug = useCallback(async () => {
     try {

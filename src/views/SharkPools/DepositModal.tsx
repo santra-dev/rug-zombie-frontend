@@ -20,7 +20,7 @@ const DepositModal: React.FC<DepositModalProps> = ({ id, updateResult, onDismiss
   const pool = sharkPoolById(id)
   const sharkpoolContract = useSharkpool(id)
   const token = useERC20(getAddress(pool.depositToken.address))
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const { toastDefault } = useToast()
   const { t } = useTranslation()
 

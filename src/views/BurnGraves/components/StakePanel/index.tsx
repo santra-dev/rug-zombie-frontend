@@ -3,7 +3,8 @@ import { ethers } from 'ethers'
 import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 import { BaseLayout, useModal } from '@rug-zombie-libs/uikit'
-import { account, burnGraveById } from '../../../../redux/get'
+import { useWeb3React } from '@web3-react/core'
+import { burnGraveById } from '../../../../redux/get'
 import { useDrBurnenstein, useERC20 } from '../../../../hooks/useContract'
 import { getAddress, getDrBurnensteinAddress } from '../../../../utils/addressHelpers'
 import useToast from '../../../../hooks/useToast'
@@ -34,7 +35,7 @@ const StakePanel: React.FC<StakePanelProps> = ({ id, updateResult }) => {
   const { t } = useTranslation()
 
   const grave = burnGraveById(id)
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
 
   const tokenContract = useERC20(getAddress(grave.stakingToken.address))
   const drBurnenstein = useDrBurnenstein()

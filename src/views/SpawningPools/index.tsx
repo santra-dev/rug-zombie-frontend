@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
 import Page from '../../components/layout/Page'
 import './SpawningPools.Styles.css'
@@ -10,7 +9,7 @@ import SpawningPoolTable from './components/SpawningPoolTable'
 import Footer from '../../components/Footer'
 import { useAppDispatch } from '../../state'
 import { fetchSpawningPoolsPublicDataAsync, fetchSpawningPoolsUserDataAsync } from '../../state/spawningPools'
-import { useGetFilteredSpawningPools } from '../../state/hooks'
+import { useAccount, useGetFilteredSpawningPools } from '../../state/hooks'
 
 const SpawningPoolPage = styled(Page)`
   min-width: 80vw;
@@ -54,7 +53,7 @@ const SpawningPoolsColumn = styled.div`
 `
 
 const SpawningPools: React.FC = () => {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const dispatch = useAppDispatch()
   useEffect(() => {
     dispatch(fetchSpawningPoolsPublicDataAsync())

@@ -11,7 +11,7 @@ const SharkPools: React.FC = () => {
   const [updatePoolInfo, setUpdatePoolInfo] = useState(0)
   const [updateUserInfo, setUpdateUserInfo] = useState(0)
 
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
 
   useEffect(() => {
     if (wallet) {

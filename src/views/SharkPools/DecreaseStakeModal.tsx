@@ -26,7 +26,7 @@ const DecreaseStakeModal: React.FC<DecreaseStakeModalProps> = ({ id, updateResul
   const [percent, setPercent] = useState(0)
   const [stakeTokenPrice, setStakeTokenPrice] = useState(0)
 
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const { theme } = useTheme()
   const poolContract = useSharkpool(id)
   const { toastDefault } = useToast()

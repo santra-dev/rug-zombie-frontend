@@ -8,7 +8,7 @@ import Page from '../../components/layout/Page'
 // import user from '../../images/icons/Icon feather-user-check.svg'
 import { useAppDispatch } from '../../state'
 import { fetchNftUserDataAsync } from '../../state/nfts'
-import { useGetNftById } from '../../state/hooks'
+import { useAccount, useGetNftById } from '../../state/hooks'
 import './Nfts.styles.css'
 import { getAddress } from '../../utils/addressHelpers'
 import { formatAddress } from '../../utils'
@@ -223,7 +223,7 @@ interface ParamTypes {
 
 const Nfts: React.FC = () => {
   const { id } = useParams<ParamTypes>()
-  const { account } = useWeb3React()
+  const account = useAccount()
   const dispatch = useAppDispatch()
 
   useEffect(() => {

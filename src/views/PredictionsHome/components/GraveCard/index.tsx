@@ -2,13 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import { CardBody, Flex } from '@rug-zombie-libs/uikit'
 import UnlockButton from 'components/UnlockButton'
+import { useAccount } from '../../../../state/hooks'
 import StartingBid from './StartingBid'
 import StyledCard from './StyledCard'
 import StyledCardHeader from './StyledCardHeader'
 import MinimumStakingTime from './MinimumStakingTime'
 import GraveCardActions from './GraveCardActions'
 import CardFooter from './CardFooter'
-import { account, auctionById } from '../../../../redux/get'
+import { auctionById } from '../../../../redux/get'
 import Video from '../../../../components/Video'
 
 const StyledCardBody = styled(CardBody)<{ isLoading: boolean }>`
@@ -16,6 +17,7 @@ const StyledCardBody = styled(CardBody)<{ isLoading: boolean }>`
 `
 
 const AuctionCard: React.FC<{ id: number }> = ({ id }) => {
+  const account = useAccount()
   const { prize, path, type } = auctionById(id)
   const isLoading = false
   return (
@@ -37,7 +39,7 @@ const AuctionCard: React.FC<{ id: number }> = ({ id }) => {
           {type === 'image' ? <img src={path} alt="auction prize" style={{ width: '50%' }} /> : <Video path={path} />}
         </Flex>
         <Flex mt="24px" flexDirection="column">
-          {account() ? (
+          {account ? (
             <GraveCardActions id={id} />
           ) : (
             <>

@@ -30,7 +30,7 @@ const Table: React.FC<TableProps> = ({ id }) => {
   const [initialized, setIsInitialized] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
 
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const pool = sharkpools.find((a) => a.id === id)
   const stakeTokenContract = useERC20(getAddress(pool.stakeToken.address))
   const depositTokenContract = useERC20(getAddress(pool.depositToken.address))

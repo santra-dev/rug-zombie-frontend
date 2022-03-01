@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Button, Card, CardFooter, CardHeader, Flex, Text, CardBody } from '@catacombs-libs/uikit'
@@ -8,7 +9,7 @@ import { ethers } from 'ethers'
 import { BIG_TEN, BIG_ZERO } from '../../../../../utils/bigNumber'
 
 import { useRugRollContract, useZombie } from '../../../../../hooks/useContract'
-import { account, zombieBalance } from '../../../../../redux/get'
+import { zombieBalance } from '../../../../../redux/get'
 import { AUTOSHARK_EXCHANGE_URL } from '../../../../../config'
 import { getAddress, getRugRollAddress, getZombieAddress } from '../../../../../utils/addressHelpers'
 import UnlockButton from '../../../../../components/UnlockButton'
@@ -48,15 +49,15 @@ const RugRollCard: React.FC<ViewCardProps> = () => {
   const [rugApprovalPending, setRugApprovalPending] = useState(false)
   const [zombieApprovalPending, setZombieApprovalPending] = useState(false)
   const [rugRollPending, setRugRollPending] = useState(false)
-  const wallet = account()
+  const account = useAccount()
   const selectedRug = tokens[ruggedToken]
 
   const handleApproveZombie = () => {
-    if (account()) {
+    if (account) {
       setZombieApprovalPending(true)
       zombie.methods
         .approve(getAddress(addresses.rugRoll), ethers.constants.MaxUint256)
-        .send({ from: account() })
+        .send({ from: account })
         .then(() => {
           setZombieApprovalPending(false)
           setZombieApproval(BIG_TEN)
@@ -69,15 +70,15 @@ const RugRollCard: React.FC<ViewCardProps> = () => {
   }
 
   useEffect(() => {
-    if (wallet) {
+    if (account) {
       zombie.methods
-        .allowance(account(), getRugRollAddress())
+        .allowance(account, getRugRollAddress())
         .call()
         .then((res) => {
           setZombieApproval(new BigNumber(res.toString()))
         })
     }
-  }, [burnAmount, wallet, zombie.methods, ruggedToken])
+  }, [burnAmount, account, zombie.methods, ruggedToken])
 
   useEffect(() => {
     rugRollContract.methods
@@ -89,9 +90,9 @@ const RugRollCard: React.FC<ViewCardProps> = () => {
   }, [rugRollContract.methods])
 
   useEffect(() => {
-    if (wallet) {
+    if (account) {
       getBep20Contract(getAddress(selectedRug.address))
-        .methods.allowance(wallet, getRugRollAddress())
+        .methods.allowance(account, getRugRollAddress())
         .call()
         .then((res) => {
           if (new BigNumber(res.toString()).gt(0)) {
@@ -99,18 +100,18 @@ const RugRollCard: React.FC<ViewCardProps> = () => {
           }
         })
     }
-  }, [selectedRug.address, wallet])
+  }, [selectedRug.address, account])
 
   useEffect(() => {
-    if (wallet) {
+    if (account) {
       getBep20Contract(getAddress(selectedRug.address))
-        .methods.balanceOf(wallet)
+        .methods.balanceOf(account)
         .call()
         .then((res) => {
           setRugBalance(new BigNumber(res.toString()))
         })
     }
-  }, [selectedRug.address, wallet])
+  }, [selectedRug.address, account])
 
   const selectRuggedToken = (event) => {
     setRuggedToken(event.target.value)
@@ -122,7 +123,7 @@ const RugRollCard: React.FC<ViewCardProps> = () => {
     setRugApprovalPending(true)
     getBep20Contract(getAddress(tokens[ruggedToken].address), web3)
       .methods.approve(getRugRollAddress(), ethers.constants.MaxUint256)
-      .send({ from: account() })
+      .send({ from: account })
       .then(() => {
         setRugApprovalPending(false)
         setRugApproved(true)
@@ -137,7 +138,7 @@ const RugRollCard: React.FC<ViewCardProps> = () => {
     setRugRollPending(true)
     rugRollContract.methods
       .rugRoll(getAddress(selectedRug.address))
-      .send({ from: account() })
+      .send({ from: account })
       .then((tx) => {
         setRugRollPending(false)
         const receivedToken = tokenByAddress(tx.events.Swapped.returnValues._returnedRug)
@@ -177,7 +178,7 @@ const RugRollCard: React.FC<ViewCardProps> = () => {
           </select>
           {
             // eslint-disable-next-line no-nested-ternary
-            account() ? (
+            account ? (
               // eslint-disable-next-line no-nested-ternary
               zombieBalance().lt(burnAmount) ? (
                 <Button

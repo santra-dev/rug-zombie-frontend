@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, Heading } from '@rug-zombie-libs/uikit'
 import styled from 'styled-components'
 import { useTranslation } from 'contexts/Localization'
-import { graves } from 'redux/get'
+import { useGetGraves } from '../../../state/hooks'
 import CurrentGraves from './CurrentGraves'
 
 const Container = styled(Card)`
@@ -20,7 +20,7 @@ const GraveListings: React.FC = () => {
       <Heading size="xl" mb="24px" textAlign="center" paddingTop="20px">
         {t('Current Graves')}
       </Heading>
-      {graves().map((g) => {
+      {useGetGraves().data.map((g) => {
         return <CurrentGraves grave={g} />
       })}
     </Container>

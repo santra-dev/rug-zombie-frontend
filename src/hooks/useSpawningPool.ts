@@ -1,16 +1,16 @@
 // Approve an address
 import { Contract } from 'web3-eth-contract'
 import { BigNumber } from 'bignumber.js'
-import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 import { useAppDispatch } from '../state'
+import { useAccount } from '../state/hooks'
 import { spStake, spUnlock, spUnstake, spUnstakeEarly } from '../utils/callHelpers'
 import { BIG_ZERO } from '../utils/bigNumber'
 import { fetchSpawningPoolsUserDataAsync } from '../state/spawningPools'
 
 export const useStake = (spawningPoolContract: Contract, amount: BigNumber) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleStake = useCallback(async () => {
     try {
@@ -28,7 +28,7 @@ export const useStake = (spawningPoolContract: Contract, amount: BigNumber) => {
 
 export const useUnstake = (spawningPoolContract: Contract, amount: BigNumber) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleUnstake = useCallback(async () => {
     try {
@@ -46,7 +46,7 @@ export const useUnstake = (spawningPoolContract: Contract, amount: BigNumber) =>
 
 export const useUnstakeEarly = (spawningPoolContract: Contract, amount: BigNumber) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleUnstakeEarly = useCallback(async () => {
     try {
@@ -64,7 +64,7 @@ export const useUnstakeEarly = (spawningPoolContract: Contract, amount: BigNumbe
 
 export const useHarvest = (spawningPoolContract: Contract) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleHarvest = useCallback(async () => {
     try {
@@ -82,7 +82,7 @@ export const useHarvest = (spawningPoolContract: Contract) => {
 
 export const useUnlock = (spawningPoolContract: Contract, amount: BigNumber) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleUnlock = useCallback(async () => {
     try {

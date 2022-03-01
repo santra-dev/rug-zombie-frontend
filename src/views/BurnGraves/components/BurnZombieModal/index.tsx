@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { BalanceInput, Button, Flex, Modal, Text } from '@rug-zombie-libs/uikit'
 import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
+import { useWeb3React } from '@web3-react/core'
 import useTheme from '../../../../hooks/useTheme'
 import { getBalanceAmount, getDecimalAmount, getFullDisplayBalance } from '../../../../utils/formatBalance'
-import { account, burnGraveById, zombiePriceUsd } from '../../../../redux/get'
+import { burnGraveById, zombiePriceUsd } from '../../../../redux/get'
 import useTokenBalance from '../../../../hooks/useTokenBalance'
 import { getAddress } from '../../../../utils/addressHelpers'
 import tokens from '../../../../config/constants/tokens'
@@ -29,7 +30,7 @@ const BurnZombieModal: React.FC<BurnZombieModalProps> = ({ id, updateResult, onD
 
   const [burnAmount, setBurnAmount] = useState(new BigNumber(grave.poolInfo.tokensToBurn))
 
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const { theme } = useTheme()
   const zombiePrice = zombiePriceUsd()
   const tokenBalance = useTokenBalance(getAddress(tokens.zmbe.address))

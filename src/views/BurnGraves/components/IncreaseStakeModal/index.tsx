@@ -4,7 +4,8 @@ import useTheme from 'hooks/useTheme'
 import BigNumber from 'bignumber.js'
 import { useDrBurnenstein } from 'hooks/useContract'
 import styled from 'styled-components'
-import { account, burnGraveById, coingeckoPrice } from '../../../../redux/get'
+import { useWeb3React } from '@web3-react/core'
+import { burnGraveById, coingeckoPrice } from '../../../../redux/get'
 import { getBalanceAmount, getDecimalAmount, getFullDisplayBalance } from '../../../../utils/formatBalance'
 import useTokenBalance from '../../../../hooks/useTokenBalance'
 import { getAddress } from '../../../../utils/addressHelpers'
@@ -29,7 +30,7 @@ const IncreaseStakeModal: React.FC<IncreaseStakeModalProps> = ({ id, updateResul
   const [percent, setPercent] = useState(0)
   const [stakeTokenPrice, setStakeTokenPrice] = useState(0)
 
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const { theme } = useTheme()
   const tokenBalance = useTokenBalance(getAddress(grave.stakingToken.address))
   const graveContract = useDrBurnenstein()

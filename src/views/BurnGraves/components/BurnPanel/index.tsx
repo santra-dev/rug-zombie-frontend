@@ -1,7 +1,8 @@
 import React from 'react'
 import { Button, Flex, useModal } from '@rug-zombie-libs/uikit'
+import { useWeb3React } from '@web3-react/core'
 import { formatDuration } from '../../../../utils/timerHelpers'
-import { account, burnGraveById } from '../../../../redux/get'
+import { burnGraveById } from '../../../../redux/get'
 import { getFullDisplayBalance } from '../../../../utils/formatBalance'
 import { BIG_ZERO } from '../../../../utils/bigNumber'
 import { useDrBurnenstein } from '../../../../hooks/useContract'
@@ -15,7 +16,7 @@ export interface BurnPanelProps {
 }
 
 const BurnPanel: React.FC<BurnPanelProps> = ({ id, updateResult }) => {
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const grave = burnGraveById(id)
   const drburn = useDrBurnenstein()
   const { toastDefault } = useToast()

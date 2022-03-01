@@ -16,7 +16,7 @@ export interface ConvertNftModalProps {
 }
 
 const ConvertNftModal: React.FC<ConvertNftModalProps> = ({ depositNftId, nftConverterPid, onDismiss }) => {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const dispatch = useAppDispatch()
   const {
     symbol,

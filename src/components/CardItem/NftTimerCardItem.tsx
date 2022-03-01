@@ -1,7 +1,7 @@
 import React from 'react'
 import BigNumber from 'bignumber.js'
 import { ethers } from 'ethers'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from '../../state/hooks'
 import { secondsToDays } from '../../utils/timerHelpers'
 import CardItem, { CardItemValueType } from './CardItem'
 
@@ -109,7 +109,7 @@ const NftTimerCardItem: React.FC<Props> = ({
   isMinting,
   secondsUntilMintable = mintDate.toNumber() - Math.floor(Date.now() / 1000),
 }) => {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const status = getMintingStatus(amountStaked, mintDate, secondsUntilMintable, account, mintingReady, isMinting)
   if (status !== MintingStatus.TimerCountingDown) {
     return (

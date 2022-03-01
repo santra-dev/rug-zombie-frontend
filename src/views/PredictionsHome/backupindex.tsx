@@ -46,7 +46,7 @@ import React from 'react'
 const Pools: React.FC = () => {
   // const { path } = useRouteMatch()
   // const { t } = useTranslation()
-  // const { account } = useWeb3React()
+  // const account = useAccount()
   // const { currentBlock } = useBlock()
   // const [stakedOnly, setStakedOnly] = usePersistState(false, 'pancake_pool_staked')
   //

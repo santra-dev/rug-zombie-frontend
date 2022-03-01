@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { Button, Flex, Modal, Text } from '@rug-zombie-libs/uikit'
+import { useWeb3React } from '@web3-react/core'
 import { useDrBurnenstein, useERC721, useNftOwnership } from '../../../../hooks/useContract'
-import { account, burnGraveById } from '../../../../redux/get'
+import { burnGraveById } from '../../../../redux/get'
 import useToast from '../../../../hooks/useToast'
 import { useTranslation } from '../../../../contexts/Localization'
 import { getAddress, getDrBurnensteinAddress, getNftSwapperAddress } from '../../../../utils/addressHelpers'
@@ -28,7 +29,7 @@ const DepositNftModal: React.FC<DepositNftModalProps> = ({ id, updateResult, onD
   const grave = burnGraveById(id)
   const nft = useGetNftById(grave.depositNftId)
 
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const { toastDefault } = useToast()
   const { t } = useTranslation()
 

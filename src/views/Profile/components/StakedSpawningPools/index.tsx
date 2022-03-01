@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { BaseLayout, Flex, useMatchBreakpoints } from '@rug-zombie-libs/uikit'
 import styled from 'styled-components'
 import { getFullDisplayBalance } from 'utils/formatBalance'
-import { account, spawningPools } from 'redux/get'
-import { useMultiCall, useZombie } from 'hooks/useContract'
-import { initialSpawningPoolData } from '../../../../redux/fetch'
+import { useAccount, useGetSpawningPools } from '../../../../state/hooks'
 import { getSpawningPoolContract } from '../../../../utils/contractHelpers'
 import useWeb3 from '../../../../hooks/useWeb3'
 import { getAddress } from '../../../../utils/addressHelpers'
@@ -25,35 +23,27 @@ const DisplayFlex = styled(BaseLayout)`
   -webkit-box-pack: center;
   justify-content: center;
   grid-gap: 0px;
-}`
+`
 const StakedSpawningPools: React.FC<{ zombieStaked }> = ({ zombieStaked }) => {
-  const [updateUserInfo, setUpdateUserInfo] = useState(0)
+  const account = useAccount()
   const web3 = useWeb3()
-  const multi = useMultiCall()
-  const zombie = useZombie()
-  const stakedSpawningPools = spawningPools().filter((sp) => !sp.userInfo.amount.isZero())
+  const stakedSpawningPools = useGetSpawningPools().data.filter((sp) => !sp.userInfo.amount.isZero())
   const { isLg, isXl } = useMatchBreakpoints()
   const isDesktop = isLg || isXl
   const handleHarvest = () => {
     stakedSpawningPools.forEach((sp) => {
-      getSpawningPoolContract(getAddress(sp.address), web3).methods.withdraw(0).send({ from: account() })
+      getSpawningPoolContract(getAddress(sp.address), web3).methods.withdraw(0).send({ from: account })
     })
   }
   const nftsReady = () => {
     let count = 0
     stakedSpawningPools.forEach((sp) => {
-      if (Math.floor(Date.now() / 1000) > sp.userInfo.nftRevivalDate) {
+      if (Math.floor(Date.now() / 1000) > sp.userInfo.nftMintDate.toNumber()) {
         count++
       }
     })
     return count
   }
-
-  useEffect(() => {
-    if (updateUserInfo === 0) {
-      initialSpawningPoolData(zombie, undefined, { update: updateUserInfo, setUpdate: setUpdateUserInfo })
-    }
-  }, [multi, updateUserInfo, zombie])
 
   const buttonStyle = isDesktop ? {} : { fontSize: '10px' }
   return (

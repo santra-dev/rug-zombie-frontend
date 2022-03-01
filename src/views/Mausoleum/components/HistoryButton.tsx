@@ -1,13 +1,13 @@
 import React from 'react'
-import { useWeb3React } from '@web3-react/core'
 import { AutoRenewIcon, HistoryIcon, IconButton } from '@rug-zombie-libs/uikit'
 import { useAppDispatch } from 'state'
 import { setHistoryPaneState } from 'state/predictions'
+import { useAccount } from '../../../state/hooks'
 
 const HistoryButton = () => {
   const isFetchingHistory = false
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleClick = () => {
     dispatch(setHistoryPaneState(true))

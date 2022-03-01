@@ -30,7 +30,7 @@ interface StakePanelProps {
 const StakePanel: React.FC<StakePanelProps> = ({ id, updateResult }) => {
   const [isApproved, setIsApproved] = useState(false)
 
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const { toastDefault } = useToast()
   const { t } = useTranslation()
   const pool = sharkPoolById(id)

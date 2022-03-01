@@ -2,13 +2,14 @@ import React from 'react'
 
 import './Profile.Styles.css'
 import { Flex } from '@rug-zombie-libs/uikit'
+import { useAccount } from '../../state/hooks'
 import ProfilePage from './ProfilePage'
-import { account } from '../../redux/get'
 
 const Profile: React.FC = () => {
+  const account = useAccount()
   return (
     <>
-      {account() && account() !== '' ? (
+      {account && account !== '' ? (
         <ProfilePage />
       ) : (
         <Flex style={{ paddingTop: '10px', width: '100%', justifyContent: 'center' }}>

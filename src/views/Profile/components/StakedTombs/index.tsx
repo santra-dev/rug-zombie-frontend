@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { BaseLayout, Flex, useMatchBreakpoints } from '@rug-zombie-libs/uikit'
 import styled from 'styled-components'
-import { getBalanceAmount, getDecimalAmount, getFullDisplayBalance } from 'utils/formatBalance'
-import { account, bnbPriceUsd, tombs, zmbeBnbTomb, zombiePriceUsd } from 'redux/get'
-import { useDrFrankenstein, useMultiCall } from 'hooks/useContract'
+import { getDecimalAmount, getFullDisplayBalance } from 'utils/formatBalance'
+import { useDrFrankenstein } from 'hooks/useContract'
+import { useAccount, useGetTombs, useGetZmbeBnbTomb } from '../../../../state/hooks'
 import { BIG_ZERO } from '../../../../utils/bigNumber'
-import { initialTombData } from '../../../../redux/fetch'
 import { getId } from '../../../../utils'
 
 const TableCards = styled(BaseLayout)`
@@ -25,24 +24,18 @@ const DisplayFlex = styled(BaseLayout)`
   -webkit-box-pack: center;
   justify-content: center;
   grid-gap: 0px;
-}`
+`
 
 const StakedTombs: React.FC = () => {
+  const account = useAccount()
   const drFrankenstein = useDrFrankenstein()
-  const stakedTombs = tombs().filter((t) => !t.userInfo.amount.isZero())
-  const [updateTombUserInfo, setUpdateTombUserInfo] = useState(0)
-  const [updateTombPoolInfo, setUpdateTombPoolInfo] = useState(0)
-  const multi = useMultiCall()
+  const stakedTombs = useGetTombs().data.filter((t) => !t.userInfo.amount.isZero())
   const {
-    poolInfo: { reserves, lpTotalSupply },
-  } = zmbeBnbTomb()
+    poolInfo: { lpPriceBnb, tokenAmount },
+  } = useGetZmbeBnbTomb()
   const { isLg, isXl } = useMatchBreakpoints()
   const isDesktop = isLg || isXl
-  const reservesUsd = [
-    getBalanceAmount(reserves[0]).times(zombiePriceUsd()),
-    getBalanceAmount(reserves[1]).times(bnbPriceUsd()),
-  ]
-  const lpTokenPrice = reservesUsd[0].plus(reservesUsd[1]).div(lpTotalSupply)
+  const lpTokenPrice = tokenAmount.div(lpPriceBnb)
 
   const lpStaked = () => {
     let total = BIG_ZERO
@@ -62,18 +55,9 @@ const StakedTombs: React.FC = () => {
 
   const handleHarvest = () => {
     stakedTombs.forEach((t) => {
-      drFrankenstein.methods.withdraw(getId(t.pid), 0).send({ from: account() })
+      drFrankenstein.methods.withdraw(getId(t.pid), 0).send({ from: account })
     })
   }
-
-  useEffect(() => {
-    if (updateTombUserInfo === 0) {
-      initialTombData(
-        { update: updateTombPoolInfo, setUpdate: setUpdateTombPoolInfo },
-        { update: updateTombUserInfo, setUpdate: setUpdateTombUserInfo },
-      )
-    }
-  }, [drFrankenstein.methods, multi, updateTombPoolInfo, updateTombUserInfo])
 
   const buttonStyle = isDesktop ? {} : { fontSize: '10px' }
   return (

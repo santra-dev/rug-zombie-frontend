@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { account, burnGraveById } from 'redux/get'
+import { burnGraveById } from 'redux/get'
 import { useModal } from '@rug-zombie-libs/uikit'
 import { useERC20 } from 'hooks/useContract'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
 import { getDrBurnensteinAddress } from 'utils/addressHelpers'
 import { BIG_TEN } from 'utils/bigNumber'
+import { useWeb3React } from '@web3-react/core'
 import DepositTokenModal from './DepositTokenModal'
 
 export interface DepositTokenProps {
@@ -19,7 +20,7 @@ const DepositToken: React.FC<DepositTokenProps> = ({ id, updateResult }) => {
   const { toastDefault } = useToast()
   const { t } = useTranslation()
 
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const grave = burnGraveById(id)
   const tokenContract = useERC20(grave.poolInfo.depositAddress)
 

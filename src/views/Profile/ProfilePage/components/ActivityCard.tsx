@@ -2,7 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { BigNumber } from 'bignumber.js'
 import numeral from 'numeral'
-import { useGetNfts, useGetUserActivities } from '../../../../state/hooks'
+import { fetchUserActivityAsync } from '../../../../state/userActivites'
+import { useAppDispatch } from '../../../../state'
+import { useAccount, useGetNfts, useGetUserActivities } from '../../../../state/hooks'
 import { UserActivity } from '../../../../state/types'
 import { UserActivityType } from '../../../../config/constants/types'
 import { getBalanceNumber } from '../../../../utils/formatBalance'
@@ -78,6 +80,8 @@ const Loading = styled.p`
 `
 
 const ProfilePage: React.FC = () => {
+  const account = useAccount()
+  const dispatch = useAppDispatch()
   const nfts = useGetNfts().data
 
   const getNftByAddress = (address: string) => nfts.find((n) => equalAddresses(getAddress(n.address), address))

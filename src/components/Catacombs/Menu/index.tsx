@@ -1,15 +1,15 @@
 import React from 'react'
 import { Menu as UikitMenu } from '@catacombs-libs/uikit'
-import { useWeb3React } from '@web3-react/core'
 import { languageList, Language } from 'config/localization/languages'
 import { useTranslation } from 'contexts/Localization'
 import useAuth from 'hooks/useAuth'
+import { useAccount } from '../../../state/hooks'
 import config from './config'
 import { zombiePriceUsd } from '../../../redux/get'
 import { CatacombsThemeContextProvider } from '../../../contexts/ThemeContext'
 
 const Menu = (props) => {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { login, logout } = useAuth()
   const { currentLanguage, setLanguage } = useTranslation()
   return (

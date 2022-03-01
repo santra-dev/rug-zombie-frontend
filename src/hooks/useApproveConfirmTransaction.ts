@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useRef } from 'react'
 import { noop } from 'lodash'
-import { useWeb3React } from '@web3-react/core'
 import useToast from 'hooks/useToast'
+import { useAccount } from '../state/hooks'
 
 type Web3Payload = Record<string, unknown> | null
 
@@ -95,7 +95,7 @@ const useApproveConfirmTransaction = ({
   onRequiresApproval,
   onSuccess = noop,
 }: ApproveConfirmTransaction) => {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const [state, dispatch] = useReducer(reducer, initialState)
   const handlePreApprove = useRef(onRequiresApproval)
   const { toastError } = useToast()

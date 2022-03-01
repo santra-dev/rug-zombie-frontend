@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { useWeb3React } from '@web3-react/core'
+import { fetchUserActivityAsync } from '../../../../state/userActivites'
 import { useAppDispatch } from '../../../../state'
-import { useGetGraves, useGetSpawningPools, useGetTombs } from '../../../../state/hooks'
+import { useAccount, useGetGraves, useGetSpawningPools, useGetTombs } from '../../../../state/hooks'
 import '../../Profile.Styles.css'
 import { BIG_ZERO } from '../../../../utils/bigNumber'
 import { fetchGravesUserDataAsync } from '../../../../state/graves'
@@ -85,7 +85,7 @@ const InnerCardDiv = styled.div`
 `
 
 const ProfilePage: React.FC = () => {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const web3 = useWeb3()
   const dispatch = useAppDispatch()
 

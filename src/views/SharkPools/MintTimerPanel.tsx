@@ -13,7 +13,7 @@ interface MintTimerPanelProps {
 }
 
 const MintTimerPanel: React.FC<MintTimerPanelProps> = ({ id, updateResult }) => {
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const pool = sharkPoolById(id)
   const poolContract = useSharkpool(id)
   const { toastDefault } = useToast()

@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { Button, Flex, Image, Modal, Text } from '@catacombs-libs/uikit'
 import { BigNumber } from 'bignumber.js'
 import tokens from '../../../config/constants/tokens'
-import { account, zombieBalance } from '../../../redux/get'
+import { zombieBalance } from '../../../redux/get'
 import { APESWAP_EXCHANGE_URL } from '../../../config'
+import { useAccount } from '../../../state/hooks'
 import { getAddress, getCatacombsAddress, getZombieAddress } from '../../../utils/addressHelpers'
 
 import { useCatacombsContract, useZombie } from '../../../hooks/useContract'
@@ -19,6 +20,7 @@ interface BurnZombieModalProps {
 }
 
 const BurnZombieConfirmationModal: React.FC<BurnZombieModalProps> = ({ onDismiss, setUnlocked }) => {
+  const account = useAccount()
   const [burnAmount, setBurnAmount] = useState(BIG_ZERO)
   const [burned, setBurned] = useState(false)
   const [allowance, setAllowance] = useState(BIG_ZERO)
@@ -35,21 +37,21 @@ const BurnZombieConfirmationModal: React.FC<BurnZombieModalProps> = ({ onDismiss
   }, [catacombs.methods])
 
   useEffect(() => {
-    if (account()) {
+    if (account) {
       zombie.methods
-        .allowance(account(), getCatacombsAddress())
+        .allowance(account, getCatacombsAddress())
         .call()
         .then((res) => {
           setAllowance(new BigNumber(res))
         })
     }
-  }, [zombie.methods])
+  }, [zombie.methods, account])
 
   const handleBurnZombie = () => {
-    if (account()) {
+    if (account) {
       catacombs.methods
         .UnlockCatacombs()
-        .send({ from: account() })
+        .send({ from: account })
         .then(() => {
           setBurned(!burned)
           setUnlocked(true)
@@ -59,14 +61,14 @@ const BurnZombieConfirmationModal: React.FC<BurnZombieModalProps> = ({ onDismiss
   }
 
   const handleApproveAndBurnZombie = () => {
-    if (account()) {
+    if (account) {
       zombie.methods
         .approve(getAddress(addresses.catacombs), burnAmount.toString())
-        .send({ from: account() })
+        .send({ from: account })
         .then(() => {
           catacombs.methods
             .UnlockCatacombs()
-            .send({ from: account() })
+            .send({ from: account })
             .then(() => {
               setBurned(!burned)
               setUnlocked(true)
@@ -99,7 +101,7 @@ const BurnZombieConfirmationModal: React.FC<BurnZombieModalProps> = ({ onDismiss
       </Text>
       {
         // eslint-disable-next-line no-nested-ternary
-        account() ? (
+        account ? (
           zombieBalance().isZero() ? (
             <Button
               mt="8px"

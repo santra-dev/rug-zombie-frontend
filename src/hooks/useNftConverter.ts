@@ -3,13 +3,14 @@ import { Contract } from 'web3-eth-contract'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 import { useAppDispatch } from '../state'
+import { useAccount } from '../state/hooks'
 import { convertNft } from '../utils/callHelpers'
 import { fetchGravesUserDataAsync } from '../state/graves'
 
 // eslint-disable-next-line import/prefer-default-export
 export const useConvertNft = (nftSwapperContract: Contract, nftConverterPid: number, tokenId: number) => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const handleNftConvert = useCallback(async () => {
     try {

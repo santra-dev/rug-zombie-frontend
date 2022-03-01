@@ -3,7 +3,7 @@ import { useWalletModal } from '@rug-zombie-libs/uikit'
 import useAuth from 'hooks/useAuth'
 import { useTranslation } from 'contexts/Localization'
 import styled from 'styled-components'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from '../state/hooks'
 import { PrimaryButton } from './Buttons'
 import { Text } from './TopMenu/styles'
 import { formatAddress } from '../utils'
@@ -26,7 +26,7 @@ export const ConnectText = styled(Text)`
 
 const UnlockButton = (props) => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { login, logout } = useAuth()
   const { onPresentConnectModal, onPresentAccountModal } = useWalletModal(login, logout, account)
 

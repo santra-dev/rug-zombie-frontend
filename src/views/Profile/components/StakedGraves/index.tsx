@@ -3,9 +3,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { useDrFrankenstein } from 'hooks/useContract'
 import { getFullDisplayBalance } from 'utils/formatBalance'
-import { account, graves } from 'redux/get'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
+import { useAccount, useGetGraves } from '../../../../state/hooks'
 import { BIG_ZERO } from '../../../../utils/bigNumber'
 import { getId } from '../../../../utils'
 
@@ -17,7 +17,7 @@ const DisplayFlex = styled(BaseLayout)`
   -webkit-box-pack: center;
   justify-content: center;
   grid-gap: 0px;
-}`
+`
 const TableCards = styled(BaseLayout)`
   width: 100%;
 
@@ -27,14 +27,15 @@ const TableCards = styled(BaseLayout)`
   }
 `
 const StakedGraves: React.FC<{ zombieStaked }> = ({ zombieStaked }) => {
-  const stakedGraves = graves().filter((g) => !g.userInfo.amount.isZero())
+  const account = useAccount()
+  const stakedGraves = useGetGraves().data.filter((g) => !g.userInfo.amount.isZero())
   const { isLg, isXl } = useMatchBreakpoints()
   const isDesktop = isLg || isXl
 
   const nftsReady = () => {
     let count = 0
     stakedGraves.forEach((g) => {
-      if (Math.floor(Date.now() / 1000) > g.userInfo.nftRevivalDate) {
+      if (Math.floor(Date.now() / 1000) > g.userInfo.nftMintDate.toNumber()) {
         count++
       }
     })
@@ -56,14 +57,14 @@ const StakedGraves: React.FC<{ zombieStaked }> = ({ zombieStaked }) => {
       if (getId(stakedGrave.pid) === 0) {
         drFrankenstein.methods
           .leaveStaking(0)
-          .send({ from: account() })
+          .send({ from: account })
           .then(() => {
             toastDefault(t('Claimed ZMBE'))
           })
       } else {
         drFrankenstein.methods
           .withdraw(getId(stakedGrave.pid), 0)
-          .send({ from: account() })
+          .send({ from: account })
           .then(() => {
             toastDefault(t('Claimed ZMBE'))
           })

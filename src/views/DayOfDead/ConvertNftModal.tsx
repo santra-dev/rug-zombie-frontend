@@ -16,7 +16,7 @@ interface ConvertNftProps {
 
 const ConvertNftModal: React.FC<ConvertNftProps> = ({ rznftid, onDismiss }) => {
   const rznft = nfts.find((a) => a.id === rznftid)
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const { toastDefault } = useToast()
   const { t } = useTranslation()
 

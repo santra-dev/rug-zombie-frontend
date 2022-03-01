@@ -10,11 +10,11 @@ import AppContainer from 'components/AppContainer'
 import Loader from 'components/Loader'
 import Tombs from 'views/Tombs'
 import Gravedigger from 'views/Gravedigger/'
-import { useWeb3React } from '@web3-react/core'
 import SpawnWithUs from 'views/SpawnWithUs'
 import Catacombs from 'views/Catacombs'
 import SuspenseWithChunkError from './components/SuspenseWithChunkError'
 import history from './routerHistory'
+import { useAccount } from './state/hooks'
 import GlobalStyle from './style/Global'
 import Graves from './views/Graves'
 import * as fetch from './redux/fetch'
@@ -60,7 +60,7 @@ const App: React.FC = () => {
     document.title = 'RugZombie'
   })
   useEagerConnect()
-  const { account } = useWeb3React()
+  const account = useAccount()
   useEffect(() => {
     fetch.initialData(account, setZombiePrice)
   }, [account])

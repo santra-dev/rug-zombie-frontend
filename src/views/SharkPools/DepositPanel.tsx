@@ -18,7 +18,7 @@ const DepositPanel: React.FC<DepositPanelProps> = ({ id, updateResult }) => {
 
   const [isApproved, setIsApproved] = useState(false)
 
-  const wallet = account()
+  const { account: wallet } = useWeb3React()
   const { toastDefault } = useToast()
   const { t } = useTranslation()
   const tokenContract = useERC20(getAddress(pool.depositToken.address))
