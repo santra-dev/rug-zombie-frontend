@@ -70,10 +70,6 @@ const ProgressBar: React.FC<StakingProgressBarProps> = ({ grave }) => {
   if (paidUnlockFee) {
     currentStep = Step.ApproveZombie
   }
-  // if ((zombieAllowance.gt(0) && paidUnlockFee) || isFirstGrave) {
-  //   steps.splice(Step.ApproveZombie, 1)
-  //   // currentStep -= 1
-  // }
   if (amount.gt(0)) {
     currentStep = Step.Staked
   }

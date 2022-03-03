@@ -1,7 +1,8 @@
 /* eslint-disable no-param-reassign */
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useAccount, useGetFilteredGraves } from 'state/hooks'
+import { useWeb3React } from '@web3-react/core'
+import { useGetFilteredGraves } from 'state/hooks'
 import Page from '../../components/layout/Page'
 import './Graves.Styles.css'
 import HeaderCard from './components/HeaderCard'
@@ -54,7 +55,7 @@ const GravesColumn = styled.div`
 `
 
 const Graves: React.FC = () => {
-  const account = useAccount()
+  const { account } = useWeb3React()
   const dispatch = useAppDispatch()
 
   useEffect(() => {

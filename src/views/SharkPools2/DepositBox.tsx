@@ -1,11 +1,11 @@
 import React from 'react'
 import { useModal } from '@rug-zombie-libs/uikit'
-import { account } from 'redux/get'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
 import { useERC20 } from 'hooks/useContract'
 import { getAddress } from 'utils/addressHelpers'
 import { BIG_TEN } from 'utils/bigNumber'
+import { useWeb3React } from '@web3-react/core'
 import sharkpools from './SharkSetup'
 import DepositModal from './DepositModal'
 
@@ -17,15 +17,15 @@ interface DepositBoxProps {
 const DepositBox: React.FC<DepositBoxProps> = ({ id, onDeposit }) => {
   const { toastDefault } = useToast()
   const { t } = useTranslation()
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const pool = sharkpools.find((a) => a.id === id)
   const tokenContract = useERC20(getAddress(pool.stakeToken.address))
 
   const handleApprove = () => {
-    if (wallet) {
+    if (account) {
       tokenContract.methods
         .approve(pool.address, BIG_TEN.pow(18).toString())
-        .send({ from: wallet })
+        .send({ from: account })
         .then(() => {
           toastDefault(t('Approved cJAWS'))
           pool.approvedDeposit = true
@@ -36,7 +36,7 @@ const DepositBox: React.FC<DepositBoxProps> = ({ id, onDeposit }) => {
   const [handleDeposit] = useModal(<DepositModal id={id} updateResult={onDeposit} />)
 
   const renderButtons = () => {
-    if (!wallet) {
+    if (!account) {
       return <span className="total-earned text-shadow">Connect Wallet</span>
     }
 

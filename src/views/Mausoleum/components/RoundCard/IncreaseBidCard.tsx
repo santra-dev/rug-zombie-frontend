@@ -4,6 +4,7 @@ import { CardBody, LinkExternal, PlayCircleOutlineIcon, Button, Text, Flex } fro
 import { useTranslation } from 'contexts/Localization'
 import { BetPosition } from 'state/types'
 import { ethers } from 'ethers'
+import { useWeb3React } from '@web3-react/core'
 import CardFlip from '../CardFlip'
 import { RoundResultBox } from '../RoundResult'
 import Card from './Card'
@@ -11,7 +12,7 @@ import CardHeader from './CardHeader'
 import SetPositionCard from './SetPositionCard'
 import { BIG_TEN, BIG_ZERO } from '../../../../utils/bigNumber'
 import { getBalanceAmount } from '../../../../utils/formatBalance'
-import { account, auctionById } from '../../../../redux/get'
+import { auctionById } from '../../../../redux/get'
 import { getMausoleumAddress } from '../../../../utils/addressHelpers'
 import { useERC20, useMausoleum } from '../../../../hooks/useContract'
 import '../MobileCard/cardStyles.css'
@@ -47,6 +48,7 @@ interface OpenRoundCardProps {
 }
 
 const IncreaseBidCard: React.FC<OpenRoundCardProps> = ({ lastBid, refresh, setRefresh, id, bidId }) => {
+  const { account } = useWeb3React()
   const [state, setState] = useState({
     isSettingPosition: false,
     position: BetPosition.BULL,
@@ -104,18 +106,18 @@ const IncreaseBidCard: React.FC<OpenRoundCardProps> = ({ lastBid, refresh, setRe
   const v3 = version === 'v3'
 
   const submitBid = () => {
-    if (account()) {
+    if (account) {
       if (v3) {
         mausoleum.methods
           .increaseBid(aid)
-          .send({ from: account(), value: amount.minus(bid).toString() })
+          .send({ from: account, value: amount.minus(bid).toString() })
           .then(() => {
             setRefresh(!refresh)
           })
       } else {
         mausoleum.methods
           .increaseBid(aid, amount.minus(bid).toString())
-          .send({ from: account() })
+          .send({ from: account })
           .then(() => {
             setRefresh(!refresh)
           })
@@ -124,23 +126,23 @@ const IncreaseBidCard: React.FC<OpenRoundCardProps> = ({ lastBid, refresh, setRe
   }
 
   const withdrawBid = () => {
-    if (account()) {
-      mausoleum.methods.withdrawBid(aid).send({ from: account() })
+    if (account) {
+      mausoleum.methods.withdrawBid(aid).send({ from: account })
     }
   }
 
   const handleUnlock = () => {
-    if (account()) {
+    if (account) {
       mausoleum.methods
         .unlockFeeInBnb(aid)
         .call()
         .then((res) => {
           mausoleum.methods
             .unlock(aid)
-            .send({ from: account(), value: res.toString() })
+            .send({ from: account, value: res.toString() })
             .then(() => {
               mausoleum.methods
-                .userInfo(aid, account())
+                .userInfo(aid, account)
                 .call()
                 .then(() => {
                   auction(id, undefined, undefined, undefined, { update, setUpdate })
@@ -153,12 +155,12 @@ const IncreaseBidCard: React.FC<OpenRoundCardProps> = ({ lastBid, refresh, setRe
   const handleApprove = () => {
     bidTokenContract.methods
       .approve(getMausoleumAddress(version), ethers.constants.MaxUint256)
-      .send({ from: account() })
+      .send({ from: account })
       .then(() => {
         setAllowance(new BigNumber(ethers.constants.MaxUint256.toString()))
       })
   }
-  const accountAddress = account()
+  const accountAddress = account
 
   useEffect(() => {
     if (accountAddress && !v3) {
@@ -207,7 +209,7 @@ const IncreaseBidCard: React.FC<OpenRoundCardProps> = ({ lastBid, refresh, setRe
                       >
                         {t('SUBMIT')}
                       </Button>
-                    ) : lastBid.bidder === account() ? (
+                    ) : lastBid.bidder === account ? (
                       <Button
                         variant="secondary"
                         disabled

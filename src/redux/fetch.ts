@@ -1,13 +1,10 @@
-import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 import sharkpoolAbi from 'config/abi/autosharkPool.json'
 
 import { parseInt } from 'lodash'
-import { useGetZmbeBnbTomb } from '../state/hooks'
 import {
   getBep20Contract,
   getDrFrankensteinContract,
-  getPancakePair,
   getZombieContract,
   getDrBurnensteinContract,
   getRugMarketContract,
@@ -19,8 +16,6 @@ import {
   updateAccount,
   updateZombieTotalSupply,
   updateZombieBalance,
-  updateZombiePriceBnb,
-  updateBnbPriceUsd,
   updateDrFrankensteinZombieBalance,
   updateAuctionInfo,
   updateAuctionUserInfo,
@@ -50,7 +45,7 @@ import { getId } from '../utils'
 import { tokenByAddress } from '../utils/tokenHelper'
 import { RugMarketListing } from './types'
 
-export const initialData = (accountAddress: string, setZombiePrice?: any) => {
+export const initialData = (accountAddress: string) => {
   store.dispatch(updateAccount(accountAddress))
   const zombie = getZombieContract()
   const drFrankenstein = getDrFrankensteinContract()
@@ -67,8 +62,6 @@ export const initialData = (accountAddress: string, setZombiePrice?: any) => {
     .then((res) => {
       store.dispatch(updateDrFrankensteinZombieBalance(new BigNumber(res)))
     })
-
-  bnbPriceUsd(setZombiePrice)
 
   drFrankenstein.methods
     .totalAllocPoint()
@@ -96,8 +89,6 @@ export const initialData = (accountAddress: string, setZombiePrice?: any) => {
         store.dispatch(updateZombieBalance(new BigNumber(res)))
       })
   }
-
-  // initialGraveData()
 }
 
 export const sharkPool = (
@@ -282,29 +273,6 @@ export const initialSharkPoolData = (
       setUserData ? { update: setUserData.update + index, setUpdate: setUserData.setUpdate } : undefined,
     )
     index++
-  })
-}
-
-const zombiePriceBnb = (setZombiePrice?: any) => {
-  getPancakePair(getAddress(useGetZmbeBnbTomb().lpAddress))
-    .methods.getReserves()
-    .call()
-    .then((res) => {
-      const price = new BigNumber(res._reserve1).div(res._reserve0)
-      store.dispatch(updateZombiePriceBnb(price))
-      if (setZombiePrice) {
-        setZombiePrice(price)
-      }
-    })
-}
-
-const bnbPriceUsd = (setZombiePrice?: any) => {
-  axios.get('https://api.binance.com/api/v3/avgPrice?symbol=BNBBUSD').then((res) => {
-    store.dispatch(updateBnbPriceUsd(res.data.price))
-    if (setZombiePrice) {
-      // FIXME
-      zombiePriceBnb(setZombiePrice)
-    }
   })
 }
 

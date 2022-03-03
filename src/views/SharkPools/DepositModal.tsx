@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Button, Flex, Image, Modal, Text } from '@rug-zombie-libs/uikit'
 import { BigNumber } from 'bignumber.js'
 import { useERC20, useSharkpool } from 'hooks/useContract'
-import { account, sharkPoolById } from 'redux/get'
+import { sharkPoolById } from 'redux/get'
 import { getAddress } from 'utils/addressHelpers'
 import { APESWAP_EXCHANGE_URL } from 'config'
 import useToast from 'hooks/useToast'
 import { useTranslation } from 'contexts/Localization'
+import { useWeb3React } from '@web3-react/core'
 
 interface DepositModalProps {
   id: number
@@ -20,14 +21,14 @@ const DepositModal: React.FC<DepositModalProps> = ({ id, updateResult, onDismiss
   const pool = sharkPoolById(id)
   const sharkpoolContract = useSharkpool(id)
   const token = useERC20(getAddress(pool.depositToken.address))
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const { toastDefault } = useToast()
   const { t } = useTranslation()
 
   useEffect(() => {
-    if (wallet) {
+    if (account) {
       token.methods
-        .balanceOf(wallet)
+        .balanceOf(account)
         .call()
         .then((res) => {
           setHasToken(!new BigNumber(res).isZero())
@@ -38,7 +39,7 @@ const DepositModal: React.FC<DepositModalProps> = ({ id, updateResult, onDismiss
   const handleDeposit = () => {
     sharkpoolContract.methods
       .depositUnlock()
-      .send({ from: wallet })
+      .send({ from: account })
       .then(() => {
         updateResult(id)
         toastDefault(t(`1 ${pool.depositToken.symbol} DEPOSITED`))

@@ -1,19 +1,25 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
+import accountReducer from './account'
+import blockReducer from './block'
 import gravesReducer from './graves'
 import tombsReducer from './tombs'
 import spawningPoolsReducer from './spawningPools'
 import nftReducer from './nfts'
+import pricesReducer from './prices'
 import userActivityReducer from './userActivites'
 
 const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
   reducer: {
+    account: accountReducer,
+    block: blockReducer,
     graves: gravesReducer,
     tombs: tombsReducer,
     spawningPools: spawningPoolsReducer,
     nfts: nftReducer,
     userActivity: userActivityReducer,
+    prices: pricesReducer,
   },
 })
 

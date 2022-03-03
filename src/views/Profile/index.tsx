@@ -2,11 +2,11 @@ import React from 'react'
 
 import './Profile.Styles.css'
 import { Flex } from '@rug-zombie-libs/uikit'
-import { useAccount } from '../../state/hooks'
+import { useWeb3React } from '@web3-react/core'
 import ProfilePage from './ProfilePage'
 
 const Profile: React.FC = () => {
-  const account = useAccount()
+  const { account } = useWeb3React()
   return (
     <>
       {account && account !== '' ? (

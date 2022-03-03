@@ -4,11 +4,12 @@ import { ethers } from 'ethers'
 import { useModal, BaseLayout } from '@rug-zombie-libs/uikit'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
-import { account, sharkPoolById } from 'redux/get'
+import { sharkPoolById } from 'redux/get'
 import { useERC20, useSharkpool } from 'hooks/useContract'
 import { getAddress } from 'utils/addressHelpers'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import BigNumber from 'bignumber.js'
+import { useWeb3React } from '@web3-react/core'
 import IncreaseStakeModal from './IncreaseStakeModal'
 import DecreaseStakeModal from './DecreaseStakeModal'
 
@@ -30,7 +31,7 @@ interface StakePanelProps {
 const StakePanel: React.FC<StakePanelProps> = ({ id, updateResult }) => {
   const [isApproved, setIsApproved] = useState(false)
 
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const { toastDefault } = useToast()
   const { t } = useTranslation()
   const pool = sharkPoolById(id)
@@ -38,9 +39,9 @@ const StakePanel: React.FC<StakePanelProps> = ({ id, updateResult }) => {
   const poolContract = useSharkpool(id)
 
   useEffect(() => {
-    if (wallet) {
+    if (account) {
       tokenContract.methods
-        .allowance(wallet, getAddress(pool.address))
+        .allowance(account, getAddress(pool.address))
         .call()
         .then((res) => {
           if (parseInt(res.toString()) !== 0) {
@@ -50,17 +51,17 @@ const StakePanel: React.FC<StakePanelProps> = ({ id, updateResult }) => {
           }
         })
     }
-  }, [pool, tokenContract, wallet])
+  }, [pool, tokenContract, account])
 
   const handleUnlock = () => {
-    if (wallet) {
+    if (account) {
       poolContract.methods
         .unlockFeeInBnb()
         .call()
         .then((res) => {
           poolContract.methods
             .unlock()
-            .send({ from: wallet, value: res })
+            .send({ from: account, value: res })
             .then(() => {
               toastDefault(t('Pool unlocked'))
               updateResult(id)
@@ -72,7 +73,7 @@ const StakePanel: React.FC<StakePanelProps> = ({ id, updateResult }) => {
   const handleApprove = () => {
     tokenContract.methods
       .approve(getAddress(pool.address), ethers.constants.MaxUint256)
-      .send({ from: wallet })
+      .send({ from: account })
       .then(() => {
         toastDefault(t(`Approved ${pool.stakeToken.symbol}`))
         setIsApproved(true)
@@ -84,7 +85,7 @@ const StakePanel: React.FC<StakePanelProps> = ({ id, updateResult }) => {
   const [handleDecreaseStake] = useModal(<DecreaseStakeModal id={id} updateResult={updateResult} />)
 
   const renderButtons = () => {
-    if (!wallet) {
+    if (!account) {
       return <span className="total-earned text-shadow">Connect Wallet</span>
     }
 

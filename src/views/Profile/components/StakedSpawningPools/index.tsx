@@ -2,7 +2,8 @@ import React from 'react'
 import { BaseLayout, Flex, useMatchBreakpoints } from '@rug-zombie-libs/uikit'
 import styled from 'styled-components'
 import { getFullDisplayBalance } from 'utils/formatBalance'
-import { useAccount, useGetSpawningPools } from '../../../../state/hooks'
+import { useWeb3React } from '@web3-react/core'
+import { useGetSpawningPools } from '../../../../state/hooks'
 import { getSpawningPoolContract } from '../../../../utils/contractHelpers'
 import useWeb3 from '../../../../hooks/useWeb3'
 import { getAddress } from '../../../../utils/addressHelpers'
@@ -25,7 +26,7 @@ const DisplayFlex = styled(BaseLayout)`
   grid-gap: 0px;
 `
 const StakedSpawningPools: React.FC<{ zombieStaked }> = ({ zombieStaked }) => {
-  const account = useAccount()
+  const { account } = useWeb3React()
   const web3 = useWeb3()
   const stakedSpawningPools = useGetSpawningPools().data.filter((sp) => !sp.userInfo.amount.isZero())
   const { isLg, isXl } = useMatchBreakpoints()

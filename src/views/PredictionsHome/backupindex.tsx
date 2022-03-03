@@ -1,7 +1,6 @@
 import React from 'react'
 // import { Route, useRouteMatch } from 'react-router-dom'
 // import BigNumber from 'bignumber.js'
-// import { useWeb3React } from '@web3-react/core'
 // import { Heading, Flex, Image } from '@rug-zombie-libs/uikit'
 // import { useTranslation } from 'contexts/Localization'
 // import usePersistState from 'hooks/usePersistState'
@@ -46,7 +45,7 @@ import React from 'react'
 const Pools: React.FC = () => {
   // const { path } = useRouteMatch()
   // const { t } = useTranslation()
-  // const account = useAccount()
+  // const { account } = useWeb3React()
   // const { currentBlock } = useBlock()
   // const [stakedOnly, setStakedOnly] = usePersistState(false, 'pancake_pool_staked')
   //

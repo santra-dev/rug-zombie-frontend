@@ -1,6 +1,6 @@
+import { useWeb3React } from '@web3-react/core'
 import React from 'react'
 import { useModal } from '@rug-zombie-libs/uikit'
-import { useWeb3React } from '@web3-react/core'
 import { burnGraveById } from '../../../../redux/get'
 import DepositNftModal from '../DepositNftModal'
 import { useGetNftById } from '../../../../state/hooks'
@@ -13,12 +13,12 @@ export interface DepositNftPanelProps {
 const DepositNftPanel: React.FC<DepositNftPanelProps> = ({ id, updateResult }) => {
   const grave = burnGraveById(id)
   const nft = useGetNftById(grave.depositNftId)
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
 
   const [handleDeposit] = useModal(<DepositNftModal id={id} updateResult={updateResult} />)
 
   const renderButton = () => {
-    if (!wallet) {
+    if (!account) {
       return <span className="total-earned text-shadow">CONNECT WALLET</span>
     }
 

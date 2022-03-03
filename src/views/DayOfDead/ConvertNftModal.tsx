@@ -4,10 +4,10 @@ import nfts from 'config/constants/nfts'
 import { BIG_ZERO } from 'utils/bigNumber'
 import { useERC721, useNftOwnership, useNftSwapper } from 'hooks/useContract'
 import { getAddress, getNftSwapperAddress } from 'utils/addressHelpers'
-import { account } from 'redux/get'
 import BigNumber from 'bignumber.js'
 import useToast from 'hooks/useToast'
 import { useTranslation } from 'contexts/Localization'
+import { useWeb3React } from '@web3-react/core'
 
 interface ConvertNftProps {
   rznftid: number
@@ -16,7 +16,7 @@ interface ConvertNftProps {
 
 const ConvertNftModal: React.FC<ConvertNftProps> = ({ rznftid, onDismiss }) => {
   const rznft = nfts.find((a) => a.id === rznftid)
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const { toastDefault } = useToast()
   const { t } = useTranslation()
 
@@ -30,7 +30,7 @@ const ConvertNftModal: React.FC<ConvertNftProps> = ({ rznftid, onDismiss }) => {
   const [approved, setApproved] = useState(false)
 
   useEffect(() => {
-    if (selected && wallet) {
+    if (selected && account) {
       rzNftContract.methods
         .getApproved(selected)
         .call()
@@ -38,35 +38,35 @@ const ConvertNftModal: React.FC<ConvertNftProps> = ({ rznftid, onDismiss }) => {
           setApproved(res === getNftSwapperAddress())
         })
     }
-  }, [selected, wallet, rzNftContract.methods])
+  }, [selected, account, rzNftContract.methods])
 
   useEffect(() => {
-    if (wallet) {
+    if (account) {
       rzNftContract.methods
-        .balanceOf(wallet)
+        .balanceOf(account)
         .call()
         .then((res) => {
           setNftBalance(new BigNumber(res))
         })
     }
-  }, [rzNftContract.methods, wallet])
+  }, [rzNftContract.methods, account])
 
   useEffect(() => {
-    if (wallet) {
+    if (account) {
       nftOwnershipContract.methods
-        .checkOwnership(wallet, getAddress(rznft.address))
+        .checkOwnership(account, getAddress(rznft.address))
         .call()
         .then((res) => {
           setIds(res)
         })
     }
-  }, [rznft.address, nftOwnershipContract.methods, wallet])
+  }, [rznft.address, nftOwnershipContract.methods, account])
 
   function handleConvertNft() {
-    if (wallet && approved) {
+    if (account && approved) {
       nftSwapperContract.methods
         .swapNft(getAddress(rznft.address), selected)
-        .send({ from: wallet })
+        .send({ from: account })
         .then(() => {
           toastDefault(t(`Converted ${rznft.symbol}`))
           onDismiss()
@@ -75,10 +75,10 @@ const ConvertNftModal: React.FC<ConvertNftProps> = ({ rznftid, onDismiss }) => {
   }
 
   const handleApproveNft = () => {
-    if (wallet && !approved) {
+    if (account && !approved) {
       rzNftContract.methods
         .approve(getNftSwapperAddress(), selected)
-        .send({ from: wallet })
+        .send({ from: account })
         .then(() => {
           setApproved(true)
         })

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { BaseLayout, useMatchBreakpoints } from '@rug-zombie-libs/uikit'
-import { bnbPriceUsd, coingeckoPrice, sharkPoolById } from 'redux/get'
+import { coingeckoPrice, sharkPoolById } from 'redux/get'
 import numeral from 'numeral'
 import { getBalanceAmount } from 'utils/formatBalance'
 import { BigNumber } from 'bignumber.js'
 import { Token } from '../../config/constants/types'
+import { useGetBnbPriceUsd } from '../../state/prices/hooks'
 import { getPancakePair } from '../../utils/contractHelpers'
 import { getAddress } from '../../utils/addressHelpers'
 
@@ -17,7 +18,7 @@ const DisplayFlex = styled(BaseLayout)`
     -webkit-box-pack: center;
     justify-content: center;
     grid-gap: 0px;
-}`
+`
 
 const ArrowIcon = styled(BaseLayout)`
   display: flex;
@@ -51,7 +52,7 @@ const TableList: React.FC<TableListProps> = ({ id, openHandler }) => {
   const pool = sharkPoolById(id)
   const { isLg, isXl } = useMatchBreakpoints()
   const isDesktop = isLg || isXl
-  const bnbPrice = bnbPriceUsd()
+  const bnbPrice = useGetBnbPriceUsd()
 
   useEffect(() => {
     if (!pool.lpPool) {
@@ -79,7 +80,7 @@ const TableList: React.FC<TableListProps> = ({ id, openHandler }) => {
               )
               const totalSupply = getBalanceAmount(new BigNumber(totalSupplyRes.toString()))
 
-              setStakeTokenPrice(reserve.times(2).times(bnbPriceUsd()).div(totalSupply).toNumber())
+              setStakeTokenPrice(reserve.times(2).times(bnbPrice).div(totalSupply).toNumber())
             })
         })
     }

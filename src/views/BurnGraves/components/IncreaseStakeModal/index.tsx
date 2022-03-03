@@ -30,7 +30,7 @@ const IncreaseStakeModal: React.FC<IncreaseStakeModalProps> = ({ id, updateResul
   const [percent, setPercent] = useState(0)
   const [stakeTokenPrice, setStakeTokenPrice] = useState(0)
 
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const { theme } = useTheme()
   const tokenBalance = useTokenBalance(getAddress(grave.stakingToken.address))
   const graveContract = useDrBurnenstein()
@@ -77,7 +77,7 @@ const IncreaseStakeModal: React.FC<IncreaseStakeModalProps> = ({ id, updateResul
 
     graveContract.methods
       .enterStaking(id, formattedAmount)
-      .send({ from: wallet })
+      .send({ from: account })
       .then(() => {
         updateResult(id)
         toastDefault(t(`Staked ${grave.stakingToken.symbol}`))

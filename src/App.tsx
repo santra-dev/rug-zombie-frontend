@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, lazy, useState } from 'react'
 import { Router, Route, Switch, Redirect } from 'react-router-dom'
 import { ResetCSS } from '@rug-zombie-libs/uikit'
@@ -14,7 +15,7 @@ import SpawnWithUs from 'views/SpawnWithUs'
 import Catacombs from 'views/Catacombs'
 import SuspenseWithChunkError from './components/SuspenseWithChunkError'
 import history from './routerHistory'
-import { useAccount } from './state/hooks'
+import { fetchAccountAsync } from './state/account'
 import GlobalStyle from './style/Global'
 import Graves from './views/Graves'
 import * as fetch from './redux/fetch'
@@ -34,6 +35,7 @@ import { useAppDispatch } from './state'
 import { fetchNftPublicDataAsync } from './state/nfts'
 import Nfts from './views/Nfts'
 import BurnGraves from './views/BurnGraves'
+import { fetchPricesAsync } from './state/prices'
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page
@@ -53,22 +55,30 @@ const App: React.FC = () => {
     console.warn = () => null
   }, [])
 
-  const [, setZombiePrice] = useState(0)
   const [modal, setModal] = useState(null)
 
   useEffect(() => {
     document.title = 'RugZombie'
   })
   useEagerConnect()
-  const account = useAccount()
+
+  const { account } = useWeb3React()
   useEffect(() => {
-    fetch.initialData(account, setZombiePrice)
-  }, [account])
+    dispatch(fetchAccountAsync(account))
+  }, [dispatch, account])
+
+  useEffect(() => {
+    dispatch(fetchPricesAsync())
+  }, [dispatch])
 
   // initialise nft state
   useEffect(() => {
     dispatch(fetchNftPublicDataAsync())
   }, [dispatch])
+
+  useEffect(() => {
+    fetch.initialData(account)
+  }, [account])
 
   return (
     <Router history={history}>

@@ -24,13 +24,13 @@ const DepositTokenModal: React.FC<DepositTokenModalProps> = ({ id, updateResult,
 
   const grave = burnGraveById(id)
   const token = useERC20(getAddress(grave.depositToken.address))
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const drBurnensteinContract = useDrBurnenstein()
 
   useEffect(() => {
-    if (wallet) {
+    if (account) {
       token.methods
-        .balanceOf(wallet)
+        .balanceOf(account)
         .call()
         .then((res) => {
           setHasToken(!new BigNumber(res).isZero())
@@ -39,10 +39,10 @@ const DepositTokenModal: React.FC<DepositTokenModalProps> = ({ id, updateResult,
   })
 
   const handleDeposit = () => {
-    if (wallet) {
+    if (account) {
       drBurnensteinContract.methods
         .deposit(id, BIG_TEN.pow(18).toString(), 0)
-        .send({ from: wallet })
+        .send({ from: account })
         .then(() => {
           updateResult(id)
           toastDefault(t(`1 ${grave.depositToken.symbol} DEPOSITED`))

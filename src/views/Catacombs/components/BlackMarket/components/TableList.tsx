@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
 import { BaseLayout } from '@catacombs-libs/uikit'
-import { rugMarketListingById, account, markRugMarketListingSold, cancelRugMarketListing } from 'redux/get'
+import { rugMarketListingById, markRugMarketListingSold, cancelRugMarketListing } from 'redux/get'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
 import { BigNumber } from 'bignumber.js'
+import { useWeb3React } from '@web3-react/core'
 import { Token } from '../../../../../config/constants/types'
 import { useRugMarket, useZombie } from '../../../../../hooks/useContract'
 import { getRugMarketAddress } from '../../../../../utils/addressHelpers'
@@ -19,7 +20,7 @@ const DisplayFlex = styled(BaseLayout)`
     -webkit-box-pack: center;
     justify-content: center;
     grid-gap: 0px;
-}`
+`
 
 interface TableListProps {
   id: number
@@ -28,11 +29,11 @@ interface TableListProps {
 const TableList: React.FC<TableListProps> = ({ id }) => {
   const { toastDefault } = useToast()
   const { t } = useTranslation()
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const rugMarketContract = useRugMarket()
   const listing = rugMarketListingById(id)
   const [isApproved, setIsApproved] = useState(false)
-  const isOwner = listing.owner === wallet
+  const isOwner = listing.owner === account
   const isSold = listing.state === '1'
   const cancelled = listing.state === '2'
   const zmbeContract = useZombie()
@@ -44,9 +45,9 @@ const TableList: React.FC<TableListProps> = ({ id }) => {
   }
 
   useEffect(() => {
-    if (wallet) {
+    if (account) {
       zmbeContract.methods
-        .allowance(wallet, getRugMarketAddress())
+        .allowance(account, getRugMarketAddress())
         .call()
         .then((res) => {
           if (parseInt(res.toString()) !== 0) {
@@ -61,7 +62,7 @@ const TableList: React.FC<TableListProps> = ({ id }) => {
   const handleApprove = () => {
     zmbeContract.methods
       .approve(getRugMarketAddress(), ethers.constants.MaxUint256)
-      .send({ from: wallet })
+      .send({ from: account })
       .then(() => {
         toastDefault(t(`Approved ZMBE`))
         setIsApproved(true)
@@ -72,7 +73,7 @@ const TableList: React.FC<TableListProps> = ({ id }) => {
   const handleBuy = () => {
     rugMarketContract.methods
       .buy(id)
-      .send({ from: wallet })
+      .send({ from: account })
       .then(() => {
         toastDefault(t(`Swap successful`))
         markRugMarketListingSold(id)
@@ -82,7 +83,7 @@ const TableList: React.FC<TableListProps> = ({ id }) => {
   const handleCancel = () => {
     rugMarketContract.methods
       .cancel(id)
-      .send({ from: wallet })
+      .send({ from: account })
       .then(() => {
         toastDefault(t(`Listing Cancelled`))
         cancelRugMarketListing(id)

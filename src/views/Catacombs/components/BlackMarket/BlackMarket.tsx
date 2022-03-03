@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Flex, useMatchBreakpoints } from '@catacombs-libs/uikit'
+import { useWeb3React } from '@web3-react/core'
 import Menu from '../../../../components/Catacombs/Menu'
 import Page from '../../../../components/layout/Page'
 import * as get from '../../../../redux/get'
@@ -9,7 +10,7 @@ import CatacombsBackgroundMobileSVG from '../../../../images/CatacombsMain-414x7
 import Table from './components/Table'
 import { updateRugMarketListings, addRugMarketListings } from '../../../../redux/fetch'
 import TabButtons from './components/TabButtons'
-import { account, cancelRugMarketListing, markRugMarketListingSold } from '../../../../redux/get'
+import { cancelRugMarketListing, markRugMarketListingSold } from '../../../../redux/get'
 import { useRugMarket } from '../../../../hooks/useContract'
 import { tokenByAddress } from '../../../../utils/tokenHelper'
 
@@ -24,12 +25,12 @@ const Container = styled.div`
 `
 
 const BlackMarket: React.FC = () => {
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const { isLg, isXl } = useMatchBreakpoints()
   const isDesktop = isLg || isXl
   const [filter, setFilter] = useState(0)
   const rugMarketContract = useRugMarket()
-  const visibleListings = get.rugMarketListings(filter, wallet)
+  const visibleListings = get.rugMarketListings(filter, account)
   const [update, setUpdate] = useState(false)
 
   useEffect(() => {

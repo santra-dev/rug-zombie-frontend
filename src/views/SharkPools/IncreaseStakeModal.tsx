@@ -1,8 +1,9 @@
+import { useWeb3React } from '@web3-react/core'
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { BalanceInput, Button, Flex, Image, Modal, Slider, Text } from '@rug-zombie-libs/uikit'
 import useTheme from 'hooks/useTheme'
-import { account, coingeckoPrice, sharkPoolById } from 'redux/get'
+import { coingeckoPrice, sharkPoolById } from 'redux/get'
 import { getBalanceAmount, getDecimalAmount, getFullDisplayBalance } from 'utils/formatBalance'
 import { getAddress } from 'utils/addressHelpers'
 import BigNumber from 'bignumber.js'
@@ -29,7 +30,7 @@ const IncreaseStakeModal: React.FC<IncreaseStakeModalProps> = ({ id, updateResul
   const [percent, setPercent] = useState(0)
   const [stakeTokenPrice, setStakeTokenPrice] = useState(0)
 
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const { theme } = useTheme()
   const tokenBalance = useTokenBalance(getAddress(pool.stakeToken.address))
   const poolContract = useSharkpool(id)
@@ -73,7 +74,7 @@ const IncreaseStakeModal: React.FC<IncreaseStakeModalProps> = ({ id, updateResul
 
     poolContract.methods
       .deposit(formattedAmount)
-      .send({ from: wallet })
+      .send({ from: account })
       .then(() => {
         updateResult(id)
         toastDefault(t(`Staked ${pool.stakeToken.symbol}`))

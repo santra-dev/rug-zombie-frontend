@@ -2,7 +2,6 @@ import addresses from 'config/constants/contracts'
 import tokens from 'config/constants/tokens'
 import { Address } from 'config/constants/types'
 import { sharkPoolById } from '../redux/get'
-import { useGetSpawningPoolById } from '../state/spawningPools/hooks'
 
 export const getAddress = (address: Address): string => {
   const mainNetChainId = 56
@@ -52,9 +51,7 @@ export const getNftConverterAddress = () => {
 export const getPredictionsAddress = () => {
   return getAddress(addresses.predictions)
 }
-export const getSpawningPoolAddress = (id: number) => {
-  return getAddress(useGetSpawningPoolById(id).address)
-}
+
 export const getCatacombsAddress = () => {
   return getAddress(addresses.catacombs)
 }

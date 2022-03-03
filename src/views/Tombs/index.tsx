@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Page from '../../components/layout/Page'
@@ -10,7 +11,7 @@ import { getId } from '../../utils'
 import Footer from '../../components/Footer'
 import { useAppDispatch } from '../../state'
 import { fetchTombsPublicDataAsync, fetchTombsUserDataAsync } from '../../state/tombs'
-import { useAccount, useGetTombs } from '../../state/hooks'
+import { useGetTombs } from '../../state/hooks'
 import { RarityFilter, rarityFilters, TombFilter, tombFilters } from './filterConfig'
 import { getNftConfigById } from '../../state/nfts/hooks'
 
@@ -56,7 +57,7 @@ const TombsColumn = styled.div`
 `
 
 const Tombs: React.FC = () => {
-  const account = useAccount()
+  const { account } = useWeb3React()
   const dispatch = useAppDispatch()
   useEffect(() => {
     dispatch(fetchTombsPublicDataAsync())

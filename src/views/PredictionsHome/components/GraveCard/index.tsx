@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { CardBody, Flex } from '@rug-zombie-libs/uikit'
 import UnlockButton from 'components/UnlockButton'
-import { useAccount } from '../../../../state/hooks'
+import { useWeb3React } from '@web3-react/core'
 import StartingBid from './StartingBid'
 import StyledCard from './StyledCard'
 import StyledCardHeader from './StyledCardHeader'
@@ -17,7 +17,7 @@ const StyledCardBody = styled(CardBody)<{ isLoading: boolean }>`
 `
 
 const AuctionCard: React.FC<{ id: number }> = ({ id }) => {
-  const account = useAccount()
+  const { account } = useWeb3React()
   const { prize, path, type } = auctionById(id)
   const isLoading = false
   return (

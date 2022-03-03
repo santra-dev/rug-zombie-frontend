@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Button, Card, CardFooter, CardHeader, Flex, Text, CardBody } from '@catacombs-libs/uikit'
@@ -6,6 +5,7 @@ import { BigNumber } from 'bignumber.js'
 import ruggedTokens from 'config/constants/ruggedTokens'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import { ethers } from 'ethers'
+import { useWeb3React } from '@web3-react/core'
 import { BIG_TEN, BIG_ZERO } from '../../../../../utils/bigNumber'
 
 import { useRugRollContract, useZombie } from '../../../../../hooks/useContract'
@@ -49,7 +49,7 @@ const RugRollCard: React.FC<ViewCardProps> = () => {
   const [rugApprovalPending, setRugApprovalPending] = useState(false)
   const [zombieApprovalPending, setZombieApprovalPending] = useState(false)
   const [rugRollPending, setRugRollPending] = useState(false)
-  const account = useAccount()
+  const { account } = useWeb3React()
   const selectedRug = tokens[ruggedToken]
 
   const handleApproveZombie = () => {

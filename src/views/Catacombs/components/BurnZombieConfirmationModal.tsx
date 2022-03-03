@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Flex, Image, Modal, Text } from '@catacombs-libs/uikit'
 import { BigNumber } from 'bignumber.js'
+import { useWeb3React } from '@web3-react/core'
 import tokens from '../../../config/constants/tokens'
 import { zombieBalance } from '../../../redux/get'
 import { APESWAP_EXCHANGE_URL } from '../../../config'
-import { useAccount } from '../../../state/hooks'
 import { getAddress, getCatacombsAddress, getZombieAddress } from '../../../utils/addressHelpers'
 
 import { useCatacombsContract, useZombie } from '../../../hooks/useContract'
@@ -20,7 +20,7 @@ interface BurnZombieModalProps {
 }
 
 const BurnZombieConfirmationModal: React.FC<BurnZombieModalProps> = ({ onDismiss, setUnlocked }) => {
-  const account = useAccount()
+  const { account } = useWeb3React()
   const [burnAmount, setBurnAmount] = useState(BIG_ZERO)
   const [burned, setBurned] = useState(false)
   const [allowance, setAllowance] = useState(BIG_ZERO)

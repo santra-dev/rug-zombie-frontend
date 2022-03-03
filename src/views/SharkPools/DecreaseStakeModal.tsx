@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { BalanceInput, Button, Flex, Image, Modal, Slider, Text } from '@rug-zombie-libs/uikit'
 import useTheme from 'hooks/useTheme'
-import { account, coingeckoPrice, sharkPoolById } from 'redux/get'
+import { coingeckoPrice, sharkPoolById } from 'redux/get'
 import { getBalanceAmount, getDecimalAmount, getFullDisplayBalance } from 'utils/formatBalance'
 import BigNumber from 'bignumber.js'
 import { useSharkpool } from 'hooks/useContract'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
 import { BIG_TEN, BIG_ZERO } from 'utils/bigNumber'
+import { useWeb3React } from '@web3-react/core'
 
 const StyledButton = styled(Button)`
   flex-grow: 1;
@@ -26,7 +27,7 @@ const DecreaseStakeModal: React.FC<DecreaseStakeModalProps> = ({ id, updateResul
   const [percent, setPercent] = useState(0)
   const [stakeTokenPrice, setStakeTokenPrice] = useState(0)
 
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const { theme } = useTheme()
   const poolContract = useSharkpool(id)
   const { toastDefault } = useToast()
@@ -93,7 +94,7 @@ const DecreaseStakeModal: React.FC<DecreaseStakeModalProps> = ({ id, updateResul
 
     poolContract.methods
       .withdraw(formattedAmount)
-      .send({ from: wallet })
+      .send({ from: account })
       .then(() => {
         updateResult(id)
         toastDefault(t(`Withdrew ${pool.stakeToken.symbol}`))

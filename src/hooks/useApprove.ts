@@ -3,7 +3,7 @@ import { Contract } from 'web3-eth-contract'
 import { useAppDispatch } from 'state'
 import { fetchGravesUserDataAsync } from 'state/graves'
 import { approve } from 'utils/callHelpers'
-import { useAccount } from '../state/hooks'
+import { useWeb3React } from '@web3-react/core'
 import { fetchSpawningPoolsUserDataAsync } from '../state/spawningPools'
 import { fetchTombsUserDataAsync } from '../state/tombs'
 
@@ -16,7 +16,7 @@ export enum ApproveTarget {
 // Approve an address
 const useApprove = (tokenContract: Contract, spenderAddress: string, approveTarget?: ApproveTarget) => {
   const dispatch = useAppDispatch()
-  const account = useAccount()
+  const { account } = useWeb3React()
 
   const handleApprove = useCallback(async () => {
     try {

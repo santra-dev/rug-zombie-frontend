@@ -1,14 +1,14 @@
+import { useWeb3React } from '@web3-react/core'
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { useWeb3React } from '@web3-react/core'
 import { LinkExternal } from '@rug-zombie-libs/uikit'
 import Page from '../../components/layout/Page'
 // import badge from '../../images/icons/Icon feather-award.svg'
 // import user from '../../images/icons/Icon feather-user-check.svg'
 import { useAppDispatch } from '../../state'
 import { fetchNftUserDataAsync } from '../../state/nfts'
-import { useAccount, useGetNftById } from '../../state/hooks'
+import { useGetNftById } from '../../state/hooks'
 import './Nfts.styles.css'
 import { getAddress } from '../../utils/addressHelpers'
 import { formatAddress } from '../../utils'
@@ -223,7 +223,7 @@ interface ParamTypes {
 
 const Nfts: React.FC = () => {
   const { id } = useParams<ParamTypes>()
-  const account = useAccount()
+  const { account } = useWeb3React()
   const dispatch = useAppDispatch()
 
   useEffect(() => {

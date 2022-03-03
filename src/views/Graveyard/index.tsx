@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import header from 'images/GraveyardHeader.jpeg'
 import Footer from 'components/Footer'
 import { FooterImage } from 'components/Footer/styles'
-import { useAccount } from '../../state/hooks'
+import { useWeb3React } from '@web3-react/core'
 import Collections from './components/Collections'
 import { useAppDispatch } from '../../state'
 import { fetchNftPublicDataAsync, fetchNftUserDataAsync } from '../../state/nfts'
@@ -48,7 +48,7 @@ const SectionEnd = styled(FooterImage)`
 
 const Graveyard: React.FC = () => {
   const dispatch = useAppDispatch()
-  const account = useAccount()
+  const { account } = useWeb3React()
 
   useEffect(() => {
     dispatch(fetchNftPublicDataAsync())

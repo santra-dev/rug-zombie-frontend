@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import { CardBody, PlayCircleOutlineIcon, Button, Text, Flex, FlexProps } from '@rug-zombie-libs/uikit'
 import { useTranslation } from 'contexts/Localization'
 import { BetPosition } from 'state/types'
-import { useAccount } from '../../../../state/hooks'
+import { useWeb3React } from '@web3-react/core'
 import CardFlip from '../CardFlip'
 import { RoundResultBox } from '../RoundResult'
 import Card from './Card'
@@ -44,7 +44,7 @@ interface OpenRoundCardProps {
 }
 
 const AuctionEndCard: React.FC<OpenRoundCardProps> = ({ lastBid, id, bidId }) => {
-  const account = useAccount()
+  const { account } = useWeb3React()
   const [state, setState] = useState({
     isSettingPosition: false,
     position: BetPosition.BULL,

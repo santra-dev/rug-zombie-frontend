@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import {
@@ -12,7 +13,6 @@ import {
 } from '@catacombs-libs/uikit'
 import { BigNumber } from 'bignumber.js'
 import { Lightbox } from 'react-modal-image'
-import { useWeb3React } from '@web3-react/core'
 import Video from '../../../../components/Video'
 
 import { useInstaBuyContract } from '../../../../hooks/useContract'
@@ -29,7 +29,6 @@ const StyleDetails = styled.div`
 `
 const StyleCursorPointer = styled.div`
   cursor: pointer;
-  ß
   display: flex;
 `
 
@@ -55,7 +54,7 @@ const initialNftInfo = {
 }
 
 const InstabuyCard: React.FC<InstabuyCardProps> = ({ id, modalObj }) => {
-  const account = useAccount()
+  const { account } = useWeb3React()
   const { nftId, version } = instaBuyById(id)
   const { name, symbol, description, address, path, type, totalSupply } = useGetNftById(nftId)
   const [isOpen, setIsOpen] = useState(false)

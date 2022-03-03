@@ -16,7 +16,7 @@ export interface BurnPanelProps {
 }
 
 const BurnPanel: React.FC<BurnPanelProps> = ({ id, updateResult }) => {
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const grave = burnGraveById(id)
   const drburn = useDrBurnenstein()
   const { toastDefault } = useToast()
@@ -34,7 +34,7 @@ const BurnPanel: React.FC<BurnPanelProps> = ({ id, updateResult }) => {
   const onMintNft = () => {
     drburn.methods
       .leaveStaking(id, 0)
-      .send({ from: wallet })
+      .send({ from: account })
       .then(() => {
         updateResult(id)
         toastDefault(t('Minted NFT'))
@@ -44,7 +44,7 @@ const BurnPanel: React.FC<BurnPanelProps> = ({ id, updateResult }) => {
   const [handleBurn] = useModal(<BurnZombieModal id={id} updateResult={updateResult} />)
 
   const renderBurnButton = () => {
-    if (!wallet) {
+    if (!account) {
       return (
         <div className="frank-card">
           <div className="small-text">

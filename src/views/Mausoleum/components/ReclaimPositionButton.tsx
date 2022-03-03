@@ -3,7 +3,7 @@ import { AutoRenewIcon, Button, ButtonProps } from '@rug-zombie-libs/uikit'
 import { useTranslation } from 'contexts/Localization'
 import { usePredictionsContract } from 'hooks/useContract'
 import useToast from 'hooks/useToast'
-import { useAccount } from '../../../state/hooks'
+import { useWeb3React } from '@web3-react/core'
 
 interface ReclaimPositionButtonProps extends ButtonProps {
   epoch: number
@@ -14,7 +14,7 @@ interface ReclaimPositionButtonProps extends ButtonProps {
 const ReclaimPositionButton: React.FC<ReclaimPositionButtonProps> = ({ epoch, onSuccess, children, ...props }) => {
   const [isPendingTx, setIsPendingTx] = useState(false)
   const { t } = useTranslation()
-  const account = useAccount()
+  const { account } = useWeb3React()
   const predictionsContract = usePredictionsContract()
   const { toastDefault, toastError } = useToast()
 

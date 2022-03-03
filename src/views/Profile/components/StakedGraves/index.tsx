@@ -5,7 +5,8 @@ import { useDrFrankenstein } from 'hooks/useContract'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
-import { useAccount, useGetGraves } from '../../../../state/hooks'
+import { useWeb3React } from '@web3-react/core'
+import { useGetGraves } from '../../../../state/hooks'
 import { BIG_ZERO } from '../../../../utils/bigNumber'
 import { getId } from '../../../../utils'
 
@@ -27,7 +28,7 @@ const TableCards = styled(BaseLayout)`
   }
 `
 const StakedGraves: React.FC<{ zombieStaked }> = ({ zombieStaked }) => {
-  const account = useAccount()
+  const { account } = useWeb3React()
   const stakedGraves = useGetGraves().data.filter((g) => !g.userInfo.amount.isZero())
   const { isLg, isXl } = useMatchBreakpoints()
   const isDesktop = isLg || isXl

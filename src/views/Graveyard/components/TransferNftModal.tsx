@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import { Button, Input, Modal, Text } from '@rug-zombie-libs/uikit'
 import useToast from 'hooks/useToast'
 import { useERC721 } from 'hooks/useContract'
-import { useAccount } from '../../../state/hooks'
+import { useWeb3React } from '@web3-react/core'
 import InfoRow from './InfoRow'
 import { ToastDescriptionWithTx } from '../../../components/Toast'
 import { getAddress } from '../../../utils/addressHelpers'
@@ -41,7 +41,7 @@ const TransferNftModal: React.FC<TransferNftModalProps> = ({ id, tokenId, onDism
   const [isLoading, setIsLoading] = useState(false)
   const [value, setValue] = useState('')
   const [error, setError] = useState(null)
-  const account = useAccount()
+  const { account } = useWeb3React()
   const { address, name } = useGetNftById(id)
   const contract = useERC721(getAddress(address))
   const { toastDefault } = useToast()

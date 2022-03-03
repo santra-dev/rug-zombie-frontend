@@ -21,7 +21,7 @@ const DisplayFlex = styled(BaseLayout)`
   -webkit-box-pack: center;
   justify-content: center;
   grid-gap: 0px;
-}`
+`
 
 export interface StakePanelProps {
   id: number
@@ -35,15 +35,15 @@ const StakePanel: React.FC<StakePanelProps> = ({ id, updateResult }) => {
   const { t } = useTranslation()
 
   const grave = burnGraveById(id)
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
 
   const tokenContract = useERC20(getAddress(grave.stakingToken.address))
   const drBurnenstein = useDrBurnenstein()
 
   useEffect(() => {
-    if (wallet) {
+    if (account) {
       tokenContract.methods
-        .allowance(wallet, getDrBurnensteinAddress())
+        .allowance(account, getDrBurnensteinAddress())
         .call()
         .then((res) => {
           if (parseInt(res.toString()) !== 0) {
@@ -53,13 +53,13 @@ const StakePanel: React.FC<StakePanelProps> = ({ id, updateResult }) => {
           }
         })
     }
-  }, [tokenContract, wallet, setIsApproved])
+  }, [tokenContract, account, setIsApproved])
 
   const handleApprove = () => {
-    if (wallet) {
+    if (account) {
       tokenContract.methods
         .approve(getDrBurnensteinAddress(), ethers.constants.MaxUint256)
-        .send({ from: wallet })
+        .send({ from: account })
         .then(() => {
           toastDefault(t(`Approved ${grave.stakingToken.symbol}`))
           setIsApproved(true)
@@ -74,7 +74,7 @@ const StakePanel: React.FC<StakePanelProps> = ({ id, updateResult }) => {
       .then((res) => {
         drBurnenstein.methods
           .unlock(id)
-          .send({ from: wallet, value: res })
+          .send({ from: account, value: res })
           .then(() => {
             toastDefault(t('TombTable unlocked'))
             updateResult(id)
@@ -87,7 +87,7 @@ const StakePanel: React.FC<StakePanelProps> = ({ id, updateResult }) => {
   const [handleDecreaseStake] = useModal(<DecreaseStakeModal id={id} updateResult={updateResult} />)
 
   const renderButtons = () => {
-    if (!wallet) {
+    if (!account) {
       return null
     }
 

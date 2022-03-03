@@ -4,8 +4,9 @@ import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
 import useTheme from '../../../../hooks/useTheme'
+import { useGetZombiePriceUsd } from '../../../../state/prices/hooks'
 import { getBalanceAmount, getDecimalAmount, getFullDisplayBalance } from '../../../../utils/formatBalance'
-import { burnGraveById, zombiePriceUsd } from '../../../../redux/get'
+import { burnGraveById } from '../../../../redux/get'
 import useTokenBalance from '../../../../hooks/useTokenBalance'
 import { getAddress } from '../../../../utils/addressHelpers'
 import tokens from '../../../../config/constants/tokens'
@@ -30,9 +31,9 @@ const BurnZombieModal: React.FC<BurnZombieModalProps> = ({ id, updateResult, onD
 
   const [burnAmount, setBurnAmount] = useState(new BigNumber(grave.poolInfo.tokensToBurn))
 
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const { theme } = useTheme()
-  const zombiePrice = zombiePriceUsd()
+  const zombiePrice = useGetZombiePriceUsd()
   const tokenBalance = useTokenBalance(getAddress(tokens.zmbe.address))
   const drburn = useDrBurnenstein()
   const { toastDefault } = useToast()
@@ -78,7 +79,7 @@ const BurnZombieModal: React.FC<BurnZombieModalProps> = ({ id, updateResult, onD
 
     drburn.methods
       .burnZombie(id, formattedAmount)
-      .send({ from: wallet })
+      .send({ from: account })
       .then(() => {
         updateResult(id)
         toastDefault(t('Burned ZMBE'))

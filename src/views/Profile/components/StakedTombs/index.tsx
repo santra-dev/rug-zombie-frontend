@@ -3,7 +3,8 @@ import { BaseLayout, Flex, useMatchBreakpoints } from '@rug-zombie-libs/uikit'
 import styled from 'styled-components'
 import { getDecimalAmount, getFullDisplayBalance } from 'utils/formatBalance'
 import { useDrFrankenstein } from 'hooks/useContract'
-import { useAccount, useGetTombs, useGetZmbeBnbTomb } from '../../../../state/hooks'
+import { useWeb3React } from '@web3-react/core'
+import { useGetTombs, useGetZmbeBnbTomb } from '../../../../state/hooks'
 import { BIG_ZERO } from '../../../../utils/bigNumber'
 import { getId } from '../../../../utils'
 
@@ -27,7 +28,7 @@ const DisplayFlex = styled(BaseLayout)`
 `
 
 const StakedTombs: React.FC = () => {
-  const account = useAccount()
+  const { account } = useWeb3React()
   const drFrankenstein = useDrFrankenstein()
   const stakedTombs = useGetTombs().data.filter((t) => !t.userInfo.amount.isZero())
   const {

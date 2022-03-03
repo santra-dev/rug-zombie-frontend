@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { BaseLayout } from '@rug-zombie-libs/uikit'
-import { coingeckoPrice, account } from 'redux/get'
+import { coingeckoPrice } from 'redux/get'
 import { useERC20 } from 'hooks/useContract'
 import { getAddress } from 'utils/addressHelpers'
 import BigNumber from 'bignumber.js'
 import { multicallv2 } from 'utils/multicall'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import sharkpoolAbi from 'config/abi/autosharkPool.json'
+import { useWeb3React } from '@web3-react/core'
 import sharkpools, { useSharkpool } from './SharkSetup'
 import TableList from './TableList'
 import DepositBox from './DepositBox'
@@ -30,7 +31,7 @@ const Table: React.FC<TableProps> = ({ id }) => {
   const [initialized, setIsInitialized] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
 
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const pool = sharkpools.find((a) => a.id === id)
   const stakeTokenContract = useERC20(getAddress(pool.stakeToken.address))
   const depositTokenContract = useERC20(getAddress(pool.depositToken.address))
@@ -48,9 +49,9 @@ const Table: React.FC<TableProps> = ({ id }) => {
         pool.totalStaked = new BigNumber(res.toString())
       })
 
-    if (wallet) {
+    if (account) {
       stakeTokenContract.methods
-        .allowance(wallet, pool.address)
+        .allowance(account, pool.address)
         .call()
         .then((res) => {
           if (parseInt(res.toString()) !== 0) {
@@ -61,7 +62,7 @@ const Table: React.FC<TableProps> = ({ id }) => {
         })
 
       sharkpool.methods
-        .userInfo(wallet)
+        .userInfo(account)
         .call()
         .then((res) => {
           pool.stakedAmount = new BigNumber(res.amount)
@@ -72,7 +73,7 @@ const Table: React.FC<TableProps> = ({ id }) => {
 
       if (pool.requiresDeposit) {
         depositTokenContract.methods
-          .allowance(wallet, pool.address)
+          .allowance(account, pool.address)
           .call()
           .then((res) => {
             if (parseInt(res.toString()) !== 0) {
@@ -115,9 +116,9 @@ const Table: React.FC<TableProps> = ({ id }) => {
       pool.requiresDeposit = res[4]
     })
 
-    if (wallet) {
+    if (account) {
       stakeTokenContract.methods
-        .allowance(wallet, pool.address)
+        .allowance(account, pool.address)
         .call()
         .then((res) => {
           if (parseInt(res.toString()) !== 0) {
@@ -128,7 +129,7 @@ const Table: React.FC<TableProps> = ({ id }) => {
         })
 
       sharkpool.methods
-        .userInfo(wallet)
+        .userInfo(account)
         .call()
         .then((res) => {
           pool.stakedAmount = new BigNumber(res.amount)
@@ -139,7 +140,7 @@ const Table: React.FC<TableProps> = ({ id }) => {
 
       if (pool.requiresDeposit) {
         depositTokenContract.methods
-          .allowance(wallet, pool.address)
+          .allowance(account, pool.address)
           .call()
           .then((res) => {
             if (parseInt(res.toString()) !== 0) {

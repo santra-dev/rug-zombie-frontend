@@ -20,7 +20,7 @@ interface ModalProps {
 const CreateListingModal: React.FC<ModalProps> = ({ onDismiss }) => {
   const web3 = useWeb3()
   const { toastDefault } = useToast()
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const rugMarketContract = useRugMarket()
   const [quantity, setQuantity] = useState(BIG_ZERO)
   const [price, setPrice] = useState(BIG_ZERO)
@@ -35,9 +35,9 @@ const CreateListingModal: React.FC<ModalProps> = ({ onDismiss }) => {
   })
 
   const checkRugApproved = () => {
-    if (wallet) {
+    if (account) {
       getBep20Contract(getAddress(selectedRug.address))
-        .methods.allowance(wallet, getRugMarketAddress())
+        .methods.allowance(account, getRugMarketAddress())
         .call()
         .then((res) => {
           if (new BigNumber(res.toString()).gt(quantity)) {
@@ -62,7 +62,7 @@ const CreateListingModal: React.FC<ModalProps> = ({ onDismiss }) => {
     setApproveRuggedTokenText('Approving rugged token...')
     getBep20Contract(getAddress(tokens[ruggedToken].address), web3)
       .methods.approve(getRugMarketAddress(), ethers.constants.MaxUint256)
-      .send({ from: wallet })
+      .send({ from: account })
       .then(() => {
         setRugApproved(true)
         setApproveRuggedTokenText('Approved')
@@ -94,16 +94,16 @@ const CreateListingModal: React.FC<ModalProps> = ({ onDismiss }) => {
       toastDefault('You sure want to sell your rugged tokens for free?')
       return
     }
-    if (wallet) {
+    if (account) {
       getBep20Contract(getAddress(selectedRug.address))
-        .methods.balanceOf(wallet)
+        .methods.balanceOf(account)
         .call()
         .then((res) => {
           const rugBalance = new BigNumber(res.toString())
           if (rugBalance.gte(quantity)) {
             rugMarketContract.methods
               .add(getAddress(tokens[ruggedToken].address), quantity.toString(), price.toString())
-              .send({ from: wallet })
+              .send({ from: account })
               .then(() => {
                 toastDefault('Listing Created Successfully')
                 onDismiss()

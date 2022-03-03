@@ -20,13 +20,13 @@ const DepositToken: React.FC<DepositTokenProps> = ({ id, updateResult }) => {
   const { toastDefault } = useToast()
   const { t } = useTranslation()
 
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const grave = burnGraveById(id)
   const tokenContract = useERC20(grave.poolInfo.depositAddress)
 
   useEffect(() => {
     tokenContract.methods
-      .allowance(wallet, getDrBurnensteinAddress())
+      .allowance(account, getDrBurnensteinAddress())
       .call()
       .then((res) => {
         if (parseInt(res.toString()) !== 0) {
@@ -35,13 +35,13 @@ const DepositToken: React.FC<DepositTokenProps> = ({ id, updateResult }) => {
           setIsApproved(false)
         }
       })
-  }, [tokenContract, wallet, setIsApproved])
+  }, [tokenContract, account, setIsApproved])
 
   const handleApprove = () => {
-    if (wallet) {
+    if (account) {
       tokenContract.methods
         .approve(getDrBurnensteinAddress(), BIG_TEN.pow(18).toString())
-        .send({ from: wallet })
+        .send({ from: account })
         .then(() => {
           toastDefault(t(`Approved ${grave.depositToken.symbol}`))
           setIsApproved(true)
@@ -52,7 +52,7 @@ const DepositToken: React.FC<DepositTokenProps> = ({ id, updateResult }) => {
   const [handleDeposit] = useModal(<DepositTokenModal id={id} updateResult={updateResult} />)
 
   const renderButton = () => {
-    if (!wallet) {
+    if (!account) {
       return <span className="total-earned text-shadow">Connect Wallet</span>
     }
 

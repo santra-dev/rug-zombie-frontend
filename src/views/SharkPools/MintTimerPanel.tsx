@@ -1,11 +1,12 @@
 import React from 'react'
 import { Button } from '@rug-zombie-libs/uikit'
-import { account, sharkPoolById } from 'redux/get'
+import { sharkPoolById } from 'redux/get'
 import { formatDuration } from 'utils/timerHelpers'
 import { BIG_ZERO } from 'utils/bigNumber'
 import { useSharkpool } from 'hooks/useContract'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
+import { useWeb3React } from '@web3-react/core'
 
 interface MintTimerPanelProps {
   id: number
@@ -13,7 +14,7 @@ interface MintTimerPanelProps {
 }
 
 const MintTimerPanel: React.FC<MintTimerPanelProps> = ({ id, updateResult }) => {
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const pool = sharkPoolById(id)
   const poolContract = useSharkpool(id)
   const { toastDefault } = useToast()
@@ -31,7 +32,7 @@ const MintTimerPanel: React.FC<MintTimerPanelProps> = ({ id, updateResult }) => 
   const onMintNft = () => {
     poolContract.methods
       .withdraw(0)
-      .send({ from: wallet })
+      .send({ from: account })
       .then(() => {
         updateResult(id)
         toastDefault(t('Minted NFT'))
@@ -39,7 +40,7 @@ const MintTimerPanel: React.FC<MintTimerPanelProps> = ({ id, updateResult }) => 
   }
 
   const renderPanel = () => {
-    if (!wallet) {
+    if (!account) {
       return <span className="total-earned text-shadow">Connect Wallet</span>
     }
 

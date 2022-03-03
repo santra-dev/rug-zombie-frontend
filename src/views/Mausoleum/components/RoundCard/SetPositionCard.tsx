@@ -20,7 +20,7 @@ import useToast from 'hooks/useToast'
 import { BetPosition } from 'state/types'
 import { getBalanceAmount, getDecimalAmount } from 'utils/formatBalance'
 import UnlockButton from 'components/UnlockButton'
-import { useAccount } from '../../../../state/hooks'
+import { useWeb3React } from '@web3-react/core'
 import { getBnbAmount } from '../../helpers'
 import useSwiper from '../../hooks/useSwiper'
 import FlexRow from '../FlexRow'
@@ -70,7 +70,7 @@ const SetPositionCard: React.FC<SetPositionCardProps> = ({ id, onBack, onSuccess
   const [value, setValue] = useState('')
   const [isTxPending, setIsTxPending] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
-  const account = useAccount()
+  const { account } = useWeb3React()
   const { swiper } = useSwiper()
   const minBetAmount = BIG_ZERO
   const { t } = useTranslation()

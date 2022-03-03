@@ -1,6 +1,6 @@
+import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Flex, Modal, Text } from '@rug-zombie-libs/uikit'
-import { useWeb3React } from '@web3-react/core'
 import { useERC721, useNftConverter } from '../../../../../../../../hooks/useContract'
 import { getAddress, getNftConverterAddress } from '../../../../../../../../utils/addressHelpers'
 import { equalAddresses } from '../../../../../../../../utils'
@@ -16,7 +16,7 @@ export interface ConvertNftModalProps {
 }
 
 const ConvertNftModal: React.FC<ConvertNftModalProps> = ({ depositNftId, nftConverterPid, onDismiss }) => {
-  const account = useAccount()
+  const { account } = useWeb3React()
   const dispatch = useAppDispatch()
   const {
     symbol,

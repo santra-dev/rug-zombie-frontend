@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import PageHeader from 'components/PageHeader'
 import { Flex, Heading, LinkExternal } from '@rug-zombie-libs/uikit'
-import { account } from 'redux/get'
 import Page from 'components/layout/Page'
 import { initialSharkPoolData, sharkPool } from 'redux/fetch'
 import * as get from 'redux/get'
+import { useWeb3React } from '@web3-react/core'
 import Table from './Table'
 
 const SharkPools: React.FC = () => {
   const [updatePoolInfo, setUpdatePoolInfo] = useState(0)
   const [updateUserInfo, setUpdateUserInfo] = useState(0)
 
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
 
   useEffect(() => {
-    if (wallet) {
+    if (account) {
       if (updateUserInfo === 0) {
         initialSharkPoolData({ update: updateUserInfo, setUpdate: setUpdateUserInfo })
       }
     } else if (updatePoolInfo === 0) {
       initialSharkPoolData({ update: updatePoolInfo, setUpdate: setUpdatePoolInfo })
     }
-  }, [wallet, updatePoolInfo, updateUserInfo])
+  }, [account, updatePoolInfo, updateUserInfo])
 
   const updateResult = (id: number) => {
     sharkPool(id)

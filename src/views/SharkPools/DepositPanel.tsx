@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { account, sharkPoolById } from 'redux/get'
+import { sharkPoolById } from 'redux/get'
 import { useModal } from '@rug-zombie-libs/uikit'
 import { useERC20 } from 'hooks/useContract'
 import { useTranslation } from 'contexts/Localization'
 import useToast from 'hooks/useToast'
 import { getAddress } from 'utils/addressHelpers'
 import { BIG_TEN } from 'utils/bigNumber'
+import { useWeb3React } from '@web3-react/core'
 import DepositModal from './DepositModal'
 
 interface DepositPanelProps {
@@ -18,7 +19,7 @@ const DepositPanel: React.FC<DepositPanelProps> = ({ id, updateResult }) => {
 
   const [isApproved, setIsApproved] = useState(false)
 
-  const { account: wallet } = useWeb3React()
+  const { account } = useWeb3React()
   const { toastDefault } = useToast()
   const { t } = useTranslation()
   const tokenContract = useERC20(getAddress(pool.depositToken.address))
@@ -26,7 +27,7 @@ const DepositPanel: React.FC<DepositPanelProps> = ({ id, updateResult }) => {
   useEffect(() => {
     if (pool.poolInfo.requiresDeposit) {
       tokenContract.methods
-        .allowance(wallet, getAddress(pool.address))
+        .allowance(account, getAddress(pool.address))
         .call()
         .then((res) => {
           if (parseInt(res.toString()) !== 0) {
@@ -36,14 +37,14 @@ const DepositPanel: React.FC<DepositPanelProps> = ({ id, updateResult }) => {
           }
         })
     }
-  }, [pool, tokenContract, wallet, setIsApproved])
+  }, [pool, tokenContract, account, setIsApproved])
 
   const handleApprove = () => {
-    if (wallet) {
+    if (account) {
       if (pool.poolInfo.requiresDeposit) {
         tokenContract.methods
           .approve(getAddress(pool.address), BIG_TEN.pow(18).toString())
-          .send({ from: wallet })
+          .send({ from: account })
           .then(() => {
             toastDefault(t(`Approved ${pool.depositToken.symbol}`))
             setIsApproved(true)
@@ -55,7 +56,7 @@ const DepositPanel: React.FC<DepositPanelProps> = ({ id, updateResult }) => {
   const [handleDeposit] = useModal(<DepositModal id={id} updateResult={updateResult} />)
 
   const renderButtons = () => {
-    if (!wallet) {
+    if (!account) {
       return <span className="total-earned text-shadow">Connect Wallet</span>
     }
 

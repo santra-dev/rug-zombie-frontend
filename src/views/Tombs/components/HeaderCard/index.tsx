@@ -2,10 +2,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import numeral from 'numeral'
-import { useGetTombs } from '../../../../state/hooks'
-import { bnbPriceUsd } from '../../../../redux/get'
-import { getBalanceNumber } from '../../../../utils/formatBalance'
-import { BIG_ZERO } from '../../../../utils/bigNumber'
+import { useGetTombTvlsUsd } from '../../../../state/hooks'
 
 const InfoCard = styled.header`
   background-color: #151e21;
@@ -87,16 +84,7 @@ const Shadow = styled.div`
 `
 
 const HeaderCard: React.FC = () => {
-  const tombSum = useGetTombs().data.reduce(
-    (sum, { poolInfo: { tokenAmount, lpPriceBnb }, userInfo: { amount } }) => {
-      const lpPrice = lpPriceBnb.times(bnbPriceUsd()).toNumber()
-      return {
-        amountTvl: sum.amountTvl.plus(getBalanceNumber(amount.times(lpPrice))),
-        tokenAmountTvl: sum.tokenAmountTvl.plus(getBalanceNumber(tokenAmount.times(lpPrice))),
-      }
-    },
-    { amountTvl: BIG_ZERO, tokenAmountTvl: BIG_ZERO },
-  )
+  const { userTvl, totalTvl } = useGetTombTvlsUsd()
 
   return (
     <>
@@ -111,9 +99,9 @@ const HeaderCard: React.FC = () => {
         </InfoCardHeader>
         <InfoCardContent>
           <InfoCardSubtitle>Tombs TVL</InfoCardSubtitle>
-          <InfoCardValue>{numeral(tombSum.tokenAmountTvl).format('($ 0,0)')}</InfoCardValue>
+          <InfoCardValue>{numeral(totalTvl).format('($ 0,0)')}</InfoCardValue>
           <InfoCardSubtitle>My Holdings</InfoCardSubtitle>
-          <InfoCardValue>{numeral(tombSum.amountTvl).format('($ 0,0)')}</InfoCardValue>
+          <InfoCardValue>{numeral(userTvl).format('($ 0,0)')}</InfoCardValue>
         </InfoCardContent>
       </InfoCard>
       <Shadow />

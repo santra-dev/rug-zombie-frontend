@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import React, { useState } from 'react'
 import logo from 'images/Logo.svg'
 import dropdownIcon from 'images/menu/Dropdown_icon.svg'
@@ -5,7 +6,7 @@ import hideDropdownIcon from 'images/menu/Hide_Dropdown.svg'
 import zombiehead from 'images/menu/ZombieHead.svg'
 import basiczombie from 'images/BasicZombie.gif'
 import { useHistory } from 'react-router'
-import { zombiePriceUsd } from '../../redux/get'
+import { useGetZombiePriceUsd } from '../../state/prices/hooks'
 import config, { MenuItem } from './config'
 
 import {
@@ -102,7 +103,7 @@ const TopMenu = () => {
         <Buttons>
           <TokenButton style={{ flexDirection: 'row' }}>
             <img src={zombiehead} alt="Zombie Icon" style={{ height: '70%', paddingRight: '20px' }} />
-            <Text style={{ fontWeight: 'bold' }}>${zombiePriceUsd().toPrecision(1)}</Text>
+            <Text style={{ fontWeight: 'bold' }}>${new BigNumber(useGetZombiePriceUsd()).toPrecision(1)}</Text>
           </TokenButton>
           <UnlockButton />
           <ProfileImage onClick={() => history.push(routes.PROFILE)} src={basiczombie} alt="Profile Image" />

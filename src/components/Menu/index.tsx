@@ -3,12 +3,12 @@ import { Menu as UikitMenu } from '@rug-zombie-libs/uikit'
 import { languageList, Language } from 'config/localization/languages'
 import { useTranslation } from 'contexts/Localization'
 import useAuth from 'hooks/useAuth'
-import { useAccount } from '../../state/hooks'
+import { useWeb3React } from '@web3-react/core'
+import { useGetZombiePriceUsd } from '../../state/prices/hooks'
 import config from './config'
-import { zombiePriceUsd } from '../../redux/get'
 
 const Menu = (props) => {
-  const account = useAccount()
+  const { account } = useWeb3React()
   const { login, logout } = useAuth()
   const { currentLanguage, setLanguage } = useTranslation()
   return (
@@ -22,7 +22,7 @@ const Menu = (props) => {
       setLang={(langType) => {
         setLanguage(langType as Language)
       }}
-      cakePriceUsd={zombiePriceUsd()}
+      cakePriceUsd={useGetZombiePriceUsd()}
       links={config}
       profile={{
         username: undefined,
