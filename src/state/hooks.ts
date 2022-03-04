@@ -90,10 +90,6 @@ export const useGetGraveByPid = (pid: number) => {
   return useGetGraves().data.find((g) => getId(g.pid) === pid)
 }
 
-export const useGetTombs = () => {
-  return useSelector((state: State) => state.tombs)
-}
-
 export const useGetSpawningPools = () => {
   return useSelector((state: State) => state.spawningPools)
 }
@@ -142,3 +138,4 @@ export const useGetUserActivities = () => {
 
 export { useGetZombiePriceUsd, useGetBnbPriceUsd } from './prices/hooks'
 export { useGetNfts, useGetNftById, useGetNftTotalSupply } from './nfts/hooks'
+export { useGetTombs, useGetTombByPid, useGetZombieBnbTomb, useGetZombieBnbLpPriceBnb } from './tombs/hooks'

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
-import { initialSpawningPoolData, initialTombData } from 'redux/fetch'
+import { initialSpawningPoolData } from 'redux/fetch'
 import { drFrankensteinZombieBalance, spawningPools, tombs } from 'redux/get'
 import { BIG_ZERO } from 'utils/bigNumber'
 import { getBalanceAmount } from 'utils/formatBalance'
@@ -16,9 +16,6 @@ const Home: React.FC = () => {
   const multi = useMultiCall()
   const zombie = useZombie()
   const [updatePoolInfo, setUpdatePoolInfo] = useState(0)
-  useEffect(() => {
-    initialTombData()
-  }, [])
   useEffect(() => {
     if (updatePoolInfo === 0) {
       initialSpawningPoolData(zombie, { update: updatePoolInfo, setUpdate: setUpdatePoolInfo })

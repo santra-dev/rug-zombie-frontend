@@ -5,7 +5,7 @@ import numeral from 'numeral'
 import { useGetBnbPriceUsd, useGetZombiePriceUsd } from '../../../state/hooks'
 import { getBalanceAmount } from '../../../utils/formatBalance'
 import { drFrankensteinZombieBalance, tombs, spawningPools } from '../../../redux/get'
-import { initialTombData, initialSpawningPoolData } from '../../../redux/fetch'
+import { initialSpawningPoolData } from '../../../redux/fetch'
 
 import { useMultiCall, useZombie } from '../../../hooks/useContract'
 import { BIG_ZERO } from '../../../utils/bigNumber'
@@ -28,9 +28,6 @@ const TotalValueLockedCard: React.FC = () => {
   const multi = useMultiCall()
   const zombie = useZombie()
   const [updatePoolInfo, setUpdatePoolInfo] = useState(0)
-  useEffect(() => {
-    initialTombData()
-  }, [])
   useEffect(() => {
     if (updatePoolInfo === 0) {
       initialSpawningPoolData(zombie, { update: updatePoolInfo, setUpdate: setUpdatePoolInfo })

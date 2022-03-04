@@ -109,16 +109,6 @@ export const auctionById = (id: number): Auction => {
   return auctions().find((a) => a.id === id)
 }
 
-// store lpreserves
-export const zmbeBnbLpPriceBnb = () => {
-  const {
-    poolInfo: { reserves, lpTotalSupply },
-  } = zmbeBnbTomb()
-  const reservesBnb = [new BigNumber(reserves[0]).times(zombiePriceBnb()), getBalanceAmount(reserves[1])]
-  const bnbLpTokenPrice = reservesBnb[0].plus(reservesBnb[1]).div(lpTotalSupply)
-  return bnbLpTokenPrice
-}
-
 export const zmbePerZmbeBnbLp = () => {
   const {
     poolInfo: { reserves, lpTotalSupply },
